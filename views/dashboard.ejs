@@ -3,63 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bot Dashboard</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <header>
-        <h1>Discord Bot Dashboard</h1>
-        <a href="/auth/logout"><button>Logout</button></a>
+        <h1>Welcome, <%= user.profile.username %>!</h1>
     </header>
     <main>
-        <div class="user-info">
-            <h2>Welcome, <%= user.username %></h2>
-            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="User Avatar">
-        </div>
-
-        <h3>Your Servers</h3>
-        <section id="servers">
-            <% servers.forEach(server => { %>
+        <h2>Your Servers:</h2>
+        <div id="servers">
+            <% servers.forEach(function(server) { %>
                 <div class="server-card">
                     <h3><%= server.name %></h3>
-                    <img src="https://cdn.discordapp.com/icons/<%= server.id %>/<%= server.icon %>.png" alt="<%= server.name %> Icon" width="50" height="50">
+                    <p><%= server.id %></p>
                     <div class="buttons">
-                        <a href="/dashboard/<%= server.id %>"><button>Manage</button></a>
-                        <button onclick="toggleBotStatus('<%= server.id %>')">Toggle Bot Status</button>
-                    </div>
-                    <div id="status-<%= server.id %>" class="bot-status">
-                        <p>Status: <span id="status-text-<%= server.id %>">Loading...</span></p>
+                        <button onclick="sendMessage()">Send Message</button>
+                        <button onclick="banUser()">Ban User</button>
                     </div>
                 </div>
-            <% }) %>
-        </section>
+            <% }); %>
+        </div>
     </main>
-
     <footer>
-        <p>Discord Bot Dashboard - Manage your bot</p>
+        <p>Discord Bot Dashboard</p>
     </footer>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
 
-        function toggleBotStatus(serverId) {
-            const statusText = document.getElementById(`status-text-${serverId}`);
-            const currentStatus = statusText.textContent.trim();
-
-            if (currentStatus === 'Loading...') return;
-
-            const newStatus = currentStatus === 'Online' ? 'Offline' : 'Online';
-            statusText.textContent = newStatus;
-
-            socket.emit('toggleStatus', serverId);
+        function sendMessage() {
+            const message = prompt('Enter the message you want to send to the server:');
+            if (message) {
+                socket.emit('sendMessage', '<%= server.id %>', message);
+            }
         }
 
-        socket.on('statusChanged', (data) => {
-            const { serverId, newStatus } = data;
-            const statusText = document.getElementById(`status-text-${serverId}`);
-            statusText.textContent = newStatus;
-        });
+        function banUser() {
+            const userId = prompt('Enter the user ID you want to ban:');
+            if (userId) {
+                socket.emit('banUser', '<%= server.id %>', userId);
+            }
+        }
     </script>
 </body>
 </html>
