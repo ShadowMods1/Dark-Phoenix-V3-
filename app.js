@@ -4,9 +4,14 @@ const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
 const fetch = require('node-fetch');
+const { Client } = require('discord.js');
 require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
+
+// Create a new Discord client instance (for bot commands)
+const botClient = new Client({ intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES'] });
+botClient.login(process.env.BOT_TOKEN);
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -54,10 +59,12 @@ app.get('/auth/logout', (req, res) => {
 
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
+        // Fetch guilds where the bot is present
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
+        // Filter mutual guilds where the user has admin permissions
         const mutualGuilds = botGuilds.filter(guild =>
             req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
         );
@@ -72,7 +79,6 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// Server Management Route
 app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     try {
         const serverId = req.params.serverId;
@@ -86,15 +92,45 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
             return res.status(404).send('Server not found.');
         }
 
-        // You can retrieve specific data about the server if needed
-        // For example, server.members, server.channels, etc.
+        // Retrieve commands or configurations related to the server
+        const commands = await botClient.guilds.cache.get(serverId).commands.fetch();  // Fetch bot commands for the server
+
         res.render('server-management', {
             user: req.user,
-            server: server
+            server: server,
+            commands: commands
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error fetching server data.');
+    }
+});
+
+// Example of managing a command for a server (e.g., adding/removing a command)
+app.post('/dashboard/:serverId/manage-command', ensureAuthenticated, async (req, res) => {
+    const serverId = req.params.serverId;
+    const { command, action } = req.body;  // action can be 'add' or 'remove'
+
+    try {
+        const guild = botClient.guilds.cache.get(serverId);
+
+        if (!guild) {
+            return res.status(404).send('Guild not found');
+        }
+
+        if (action === 'add') {
+            // Logic for adding a new command
+            await guild.commands.create({ name: command, description: `Custom command: ${command}` });
+        } else if (action === 'remove') {
+            // Logic for removing a command
+            const cmd = await guild.commands.fetch(command);
+            await cmd.delete();
+        }
+
+        res.redirect(`/dashboard/${serverId}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error managing command.');
     }
 });
 
