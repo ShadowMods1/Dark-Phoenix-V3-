@@ -23,17 +23,6 @@ h1, h2, h3 {
     margin: 0;
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.user-info img {
-    border-radius: 50%;
-    margin-left: 10px;
-}
-
 #servers {
     display: flex;
     flex-wrap: wrap;
@@ -59,10 +48,6 @@ h1, h2, h3 {
 
 .server-card .buttons button:hover {
     background-color: #5b6eae;
-}
-
-.bot-status {
-    margin-top: 10px;
 }
 
 footer p {
