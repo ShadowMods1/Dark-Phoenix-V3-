@@ -1,16 +1,22 @@
+const { Client, GatewayIntentBits } = require('discord.js'); // import correct intents
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
 const fetch = require('node-fetch');
-const { Client } = require('discord.js');
 require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
 
-// Create a new Discord client instance (for bot commands)
-const botClient = new Client({ intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES'] });
+// Create a new Discord client instance with proper intents
+const botClient = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages
+    ]
+});
 botClient.login(process.env.BOT_TOKEN);
 
 // Middleware
