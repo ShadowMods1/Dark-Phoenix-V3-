@@ -13,29 +13,33 @@
     </header>
 
     <main>
-        <h2>Bot Command Management</h2>
-        <div class="bot-management">
+        <div>
+            <h3>Bot Actions</h3>
             <button onclick="sendMessage()">Send Message</button>
             <button onclick="banUser()">Ban User</button>
         </div>
-
-        <h2>Bot Status</h2>
-        <p id="status-text">Status: <span id="bot-status">Online</span></p>
     </main>
 
     <footer>
-        <p>Discord Bot Dashboard</p>
+        <p>Discord Bot Dashboard - Manage your bot</p>
     </footer>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+        const socket = io();
+
         function sendMessage() {
-            alert('Sending a message to the server!');
-            // Add API logic here to trigger the bot to send a message to a specific channel
+            const message = prompt('Enter the message you want to send to the server:');
+            if (message) {
+                socket.emit('sendMessage', '<%= server.id %>', message);
+            }
         }
 
         function banUser() {
-            alert('Banning a user!');
-            // Add API logic here to ban a user from the server
+            const userId = prompt('Enter the user ID you want to ban:');
+            if (userId) {
+                socket.emit('banUser', '<%= server.id %>', userId);
+            }
         }
     </script>
 </body>
