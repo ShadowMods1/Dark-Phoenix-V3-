@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Discord Bot Dashboard</h1>
+        <button onclick="window.location.href='/auth/logout'">Logout</button>
+    </header>
+    <main>
+        <h2>Welcome, <span id="user-name"></span></h2>
+        <h3>Your Servers</h3>
+        <section id="servers"></section>
+    </main>
+    <script>
+        const user = <%= JSON.stringify(user) %>;
+        const servers = <%= JSON.stringify(servers) %>;
+
+        document.getElementById('user-name').textContent = user.username;
+
+        const serversContainer = document.getElementById('servers');
+        servers.forEach(server => {
+            const serverCard = document.createElement('div');
+            serverCard.className = 'server-card';
+            serverCard.innerHTML = `
+                <h3>${server.name}</h3>
+                <a href="/dashboard/${server.id}"><button>Manage</button></a>
+            `;
+            serversContainer.appendChild(serverCard);
+        });
+    </script>
+</body>
+</html>
