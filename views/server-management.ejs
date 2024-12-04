@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage <%= server.name %> - Bot Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Manage <%= server.name %></h1>
+        <a href="/dashboard"><button>Back to Dashboard</button></a>
+    </header>
+
+    <main>
+        <h2>Bot Command Management</h2>
+        <div class="bot-management">
+            <button onclick="sendMessage()">Send Message</button>
+            <button onclick="banUser()">Ban User</button>
+        </div>
+
+        <h2>Bot Status</h2>
+        <p id="status-text">Status: <span id="bot-status">Online</span></p>
+    </main>
+
+    <footer>
+        <p>Discord Bot Dashboard</p>
+    </footer>
+
+    <script>
+        function sendMessage() {
+            alert('Sending a message to the server!');
+            // Add API logic here to trigger the bot to send a message to a specific channel
+        }
+
+        function banUser() {
+            alert('Banning a user!');
+            // Add API logic here to ban a user from the server
+        }
+    </script>
+</body>
+</html>
