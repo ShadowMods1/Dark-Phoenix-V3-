@@ -13,33 +13,28 @@
     </header>
 
     <main>
-        <div>
-            <h3>Bot Actions</h3>
-            <button onclick="sendMessage()">Send Message</button>
-            <button onclick="banUser()">Ban User</button>
+        <h2>Bot Management</h2>
+        <div class="bot-management">
+            <button onclick="toggleBotStatus()">Toggle Bot Status</button>
+            <p id="status-text">Loading...</p>
         </div>
     </main>
 
     <footer>
-        <p>Discord Bot Dashboard - Manage your bot</p>
+        <p>Discord Bot Dashboard</p>
     </footer>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        function toggleBotStatus() {
+            const statusText = document.getElementById('status-text');
+            const currentStatus = statusText.textContent.trim();
 
-        function sendMessage() {
-            const message = prompt('Enter the message you want to send to the server:');
-            if (message) {
-                socket.emit('sendMessage', '<%= server.id %>', message);
-            }
-        }
+            if (currentStatus === 'Loading...') return;
 
-        function banUser() {
-            const userId = prompt('Enter the user ID you want to ban:');
-            if (userId) {
-                socket.emit('banUser', '<%= server.id %>', userId);
-            }
+            const newStatus = currentStatus === 'Online' ? 'Offline' : 'Online';
+            statusText.textContent = newStatus;
+
+            alert(`Toggled bot status to ${newStatus}`);
         }
     </script>
 </body>
