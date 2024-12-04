@@ -1,4 +1,3 @@
-const { Client, GatewayIntentBits } = require('discord.js'); // import correct intents
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -9,19 +8,10 @@ require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
 
-// Create a new Discord client instance with proper intents
-const botClient = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages
-    ]
-});
-botClient.login(process.env.BOT_TOKEN);
-
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));  // Add support for form data
 app.use(session({
     secret: 'discord-bot-dashboard-secret',
     resave: false,
@@ -63,14 +53,13 @@ app.get('/auth/logout', (req, res) => {
     });
 });
 
+// Dashboard Route
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
-        // Fetch guilds where the bot is present
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
-        // Filter mutual guilds where the user has admin permissions
         const mutualGuilds = botGuilds.filter(guild =>
             req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
         );
@@ -85,6 +74,7 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     }
 });
 
+// Server Management Route
 app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     try {
         const serverId = req.params.serverId;
@@ -98,13 +88,9 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
             return res.status(404).send('Server not found.');
         }
 
-        // Retrieve commands or configurations related to the server
-        const commands = await botClient.guilds.cache.get(serverId).commands.fetch();  // Fetch bot commands for the server
-
         res.render('server-management', {
             user: req.user,
-            server: server,
-            commands: commands
+            server: server
         });
     } catch (err) {
         console.error(err);
@@ -112,31 +98,101 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// Example of managing a command for a server (e.g., adding/removing a command)
-app.post('/dashboard/:serverId/manage-command', ensureAuthenticated, async (req, res) => {
+// Handle Kick User Command
+app.get('/dashboard/:serverId/kick', ensureAuthenticated, async (req, res) => {
     const serverId = req.params.serverId;
-    const { command, action } = req.body;  // action can be 'add' or 'remove'
+    const userToKick = req.query.userId;
 
     try {
         const guild = botClient.guilds.cache.get(serverId);
-
-        if (!guild) {
-            return res.status(404).send('Guild not found');
-        }
-
-        if (action === 'add') {
-            // Logic for adding a new command
-            await guild.commands.create({ name: command, description: `Custom command: ${command}` });
-        } else if (action === 'remove') {
-            // Logic for removing a command
-            const cmd = await guild.commands.fetch(command);
-            await cmd.delete();
-        }
-
-        res.redirect(`/dashboard/${serverId}`);
+        if (!guild) return res.status(404).send('Server not found');
+        
+        const member = await guild.members.fetch(userToKick);
+        await member.kick('User kicked via dashboard command');
+        
+        res.send('User has been kicked');
     } catch (err) {
         console.error(err);
-        res.status(500).send('Error managing command.');
+        res.status(500).send('Error kicking user.');
+    }
+});
+
+// Handle Ban User Command
+app.get('/dashboard/:serverId/ban', ensureAuthenticated, async (req, res) => {
+    const serverId = req.params.serverId;
+    const userToBan = req.query.userId;
+
+    try {
+        const guild = botClient.guilds.cache.get(serverId);
+        if (!guild) return res.status(404).send('Server not found');
+
+        const member = await guild.members.fetch(userToBan);
+        await member.ban({ reason: 'User banned via dashboard command' });
+
+        res.send('User has been banned');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error banning user.');
+    }
+});
+
+// Handle Send Announcement Command
+app.post('/dashboard/:serverId/announce', ensureAuthenticated, async (req, res) => {
+    const serverId = req.params.serverId;
+    const announcement = req.body.announcement;
+
+    try {
+        const guild = botClient.guilds.cache.get(serverId);
+        if (!guild) return res.status(404).send('Server not found');
+
+        const channel = guild.channels.cache.find(ch => ch.name === 'announcements');
+        if (!channel) return res.status(404).send('Announcements channel not found');
+        
+        await channel.send(announcement);
+        res.send('Announcement sent');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error sending announcement.');
+    }
+});
+
+// Handle Clear Messages Command
+app.post('/dashboard/:serverId/clear', ensureAuthenticated, async (req, res) => {
+    const serverId = req.params.serverId;
+    const amount = req.body.amount;
+
+    try {
+        const guild = botClient.guilds.cache.get(serverId);
+        if (!guild) return res.status(404).send('Server not found');
+
+        const channel = guild.channels.cache.find(ch => ch.name === 'general');
+        if (!channel) return res.status(404).send('Channel not found');
+
+        const messages = await channel.messages.fetch({ limit: amount });
+        await channel.bulkDelete(messages);
+
+        res.send('Messages have been cleared');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error clearing messages.');
+    }
+});
+
+// Handle Change Prefix Command
+app.post('/dashboard/:serverId/prefix', ensureAuthenticated, async (req, res) => {
+    const serverId = req.params.serverId;
+    const newPrefix = req.body.prefix;
+
+    try {
+        const guild = botClient.guilds.cache.get(serverId);
+        if (!guild) return res.status(404).send('Server not found');
+
+        await updateBotPrefix(serverId, newPrefix); // Implement this function
+
+        res.send('Prefix has been changed');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error changing prefix.');
     }
 });
 
