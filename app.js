@@ -1,16 +1,31 @@
+const { Client, GatewayIntentBits } = require('discord.js');  // Import the correct intent flags
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
 const fetch = require('node-fetch');
-const { Client } = require('discord.js');
 require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
 
-// Create a new Discord client instance (for bot commands)
-const botClient = new Client({ intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES'] });
+// Create a new Discord client instance with all required intents
+const botClient = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,               // Access to Guilds
+        GatewayIntentBits.GuildMembers,         // Access to Guild members
+        GatewayIntentBits.GuildMessages,        // Access to Guild messages
+        GatewayIntentBits.MessageContent,       // Access to message content (for reading messages)
+        GatewayIntentBits.GuildEmojisAndStickers, // Access to emojis and stickers
+        GatewayIntentBits.GuildIntegrations,    // Access to integrations in guilds
+        GatewayIntentBits.GuildVoiceStates,     // Access to voice states (joining, leaving voice channels)
+        GatewayIntentBits.GuildPresences,       // Access to presences (status, online/offline)
+        GatewayIntentBits.GuildModeration,      // Access to guild moderation features (bans, kicks, etc.)
+        GatewayIntentBits.DirectMessages,       // Access to direct messages with users
+        GatewayIntentBits.DirectMessageReactions, // Access to reactions in direct messages
+        GatewayIntentBits.DirectMessageTyping,   // Access to typing status in DMs
+    ]
+});
 botClient.login(process.env.BOT_TOKEN);
 
 // Middleware
@@ -93,58 +108,14 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
             return res.status(404).send('Server not found.');
         }
 
-        // Fetch the bot's commands for the specific server
-        const commands = await botClient.guilds.cache.get(serverId).commands.fetch();
-
+        // Server management logic goes here. For example, showing commands to manage this server.
         res.render('server-management', {
             user: req.user,
-            server: server,
-            commands: commands
+            server: server
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error fetching server data.');
-    }
-});
-
-// Add or Remove Commands Logic
-app.post('/dashboard/:serverId/manage-command', ensureAuthenticated, async (req, res) => {
-    const serverId = req.params.serverId;
-    const { action, commandName, commandDescription } = req.body;  // action can be 'add' or 'remove'
-
-    try {
-        const guild = botClient.guilds.cache.get(serverId);
-        if (!guild) {
-            return res.status(404).send('Guild not found');
-        }
-
-        if (action === 'add') {
-            // Logic for adding a new command
-            if (!commandName || !commandDescription) {
-                return res.status(400).send('Command name and description are required.');
-            }
-
-            await guild.commands.create({
-                name: commandName,
-                description: commandDescription
-            });
-
-            res.redirect(`/dashboard/${serverId}`);
-        } else if (action === 'remove') {
-            // Logic for removing a command
-            const cmd = await guild.commands.fetch(commandName);
-            if (!cmd) {
-                return res.status(404).send('Command not found.');
-            }
-
-            await cmd.delete();
-            res.redirect(`/dashboard/${serverId}`);
-        } else {
-            res.status(400).send('Invalid action.');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error managing command.');
     }
 });
 
