@@ -62,15 +62,17 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
             req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
         );
 
+        // Here, you're passing the 'servers' to the dashboard view
         res.render('dashboard', {
             user: req.user,
-            servers: mutualGuilds
+            servers: mutualGuilds // Make sure you pass this data correctly
         });
     } catch (err) {
         console.error("Error fetching dashboard data:", err);
         res.status(500).send('Error fetching dashboard data.');
     }
 });
+
 
 // Server Management Route
 app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
@@ -83,26 +85,20 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
         const server = botGuilds.find(guild => guild.id === serverId);
 
         if (!server) {
-            console.error(`Server with ID ${serverId} not found.`);
             return res.status(404).send('Server not found.');
         }
 
-        // Check that the server has an ID and icon
-        if (!server.id || !server.icon) {
-            console.error(`Server data is incomplete: ${JSON.stringify(server)}`);
-            return res.status(500).send('Server data is incomplete.');
-        }
-
-        // Render server management page with server data
+        // Passing 'server' object to the view
         res.render('server-management', {
             user: req.user,
-            server: server
+            server: server // Ensure this is passed to the view
         });
     } catch (err) {
         console.error("Error fetching server data:", err);
         res.status(500).send('Error fetching server data.');
     }
 });
+
 
 // Helper Function for Auth Check
 function ensureAuthenticated(req, res, next) {
