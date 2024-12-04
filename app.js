@@ -34,8 +34,7 @@ passport.deserializeUser((obj, done) => done(null, obj));
 
 // Routes
 app.get('/', (req, res) => {
-    // Serve static HTML for index page
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.render('index', { user: req.user });
 });
 
 app.get('/auth/discord', passport.authenticate('discord'));
@@ -63,8 +62,10 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
             req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
         );
 
-        // Serve static HTML for dashboard page
-        res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+        res.render('dashboard', {
+            user: req.user,
+            servers: mutualGuilds
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error fetching dashboard data.');
@@ -76,6 +77,10 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return next();
     res.redirect('/');
 }
+
+// EJS Views Setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Render Port Compatibility
 const PORT = process.env.PORT || 3000;
