@@ -1,0 +1,6 @@
+{
+    "clientId": "YOUR_DISCORD_CLIENT_ID",
+    "clientSecret": "YOUR_DISCORD_CLIENT_SECRET",
+    "callbackURL": "https://<your-glitch-project>.glitch.me/auth/discord/callback",
+    "botToken": "YOUR_BOT_TOKEN"
+}
