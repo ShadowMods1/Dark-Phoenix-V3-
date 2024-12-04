@@ -1,0 +1,24 @@
+{
+  "name": "dark-phoenix-dashboard",
+  "version": "1.0.0",
+  "description": "A Discord bot dashboard to manage Dark Phoenix(V3)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "passport": "^0.5.0",
+    "passport-discord": "^0.2.0",
+    "ejs": "^3.1.8",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "14.x"
+  },
+  "author": "ShadowMods",
+  "license": "MIT"
+}
