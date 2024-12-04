@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Discord Bot Dashboard</h1>
+        <% if (user) { %>
+            <a href="/auth/logout"><button>Logout</button></a>
+            <a href="/dashboard"><button>Go to Dashboard</button></a>
+        <% } else { %>
+            <a href="/auth/discord"><button>Login with Discord</button></a>
+        <% } %>
+    </header>
+    <main>
+        <% if (user) { %>
+            <h2>Welcome, <%= user.username %></h2>
+            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="User Avatar">
+        <% } else { %>
+            <p>Login to manage your bot!</p>
+        <% } %>
+    </main>
+</body>
+</html>
