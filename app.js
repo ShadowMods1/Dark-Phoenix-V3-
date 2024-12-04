@@ -1,104 +1,87 @@
-require('dotenv').config();
 const express = require('express');
-const passport = require('passport');
 const session = require('express-session');
-const fetch = require('node-fetch');
+const passport = require('passport');
+const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
-const { Strategy: DiscordStrategy } = require('passport-discord');
-const socketIO = require('socket.io');
+const fetch = require('node-fetch');
+require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
-const port = process.env.PORT || 3000;
 
-// Middleware setup
+// Middleware
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'your-secret',
+    secret: 'discord-bot-dashboard-secret',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: false
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));  // View folder
 
-// Passport setup
+// Passport Configuration
 passport.use(new DiscordStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: process.env.CALLBACK_URL,
-    scope: ['identify', 'guilds', 'bot'],
+    scope: ['identify', 'guilds']
 }, (accessToken, refreshToken, profile, done) => {
-    return done(null, { accessToken, profile });
+    return done(null, profile);
 }));
 
-passport.serializeUser((user, done) => {
-    done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-    done(null, user);
-});
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
 
 // Routes
 app.get('/', (req, res) => {
-    res.redirect('/login');
-});
-
-app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('index', { user: req.user });
 });
 
 app.get('/auth/discord', passport.authenticate('discord'));
 
-app.get('/auth/discord/callback', 
-    passport.authenticate('discord', { failureRedirect: '/' }),
-    (req, res) => {
-        res.redirect('/dashboard');
+app.get('/auth/discord/callback', passport.authenticate('discord', {
+    failureRedirect: '/'
+}), (req, res) => {
+    res.redirect('/');
+});
+
+app.get('/auth/logout', (req, res) => {
+    req.logout(err => {
+        if (err) console.error(err);
+        res.redirect('/');
     });
+});
 
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
-            headers: { Authorization: `Bearer ${req.user.accessToken}` }
+            headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
-        res.render('dashboard', { user: req.user, servers: botGuilds });
+        const mutualGuilds = botGuilds.filter(guild =>
+            req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
+        );
+
+        res.render('dashboard', {
+            user: req.user,
+            servers: mutualGuilds
+        });
     } catch (err) {
-        console.error('Error fetching dashboard data:', err);
+        console.error(err);
         res.status(500).send('Error fetching dashboard data.');
     }
 });
 
-// Middleware to ensure user is authenticated
+// Helper Function
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.redirect('/login');
-    }
+    if (req.isAuthenticated()) return next();
+    res.redirect('/');
 }
 
-// Server and Socket.io setup
-const server = app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-});
+// EJS Views Setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-const io = socketIO(server);
-io.on('connection', (socket) => {
-    console.log('A user connected');
-
-    socket.on('sendMessage', (serverId, message) => {
-        console.log(`Sending message to server ${serverId}: ${message}`);
-        // Logic to send a message to the server
-    });
-
-    socket.on('banUser', (serverId, userId) => {
-        console.log(`Banning user ${userId} from server ${serverId}`);
-        // Logic to ban a user from the server
-    });
-
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
-});
+// Render Port Compatibility
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
