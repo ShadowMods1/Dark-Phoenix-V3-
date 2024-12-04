@@ -4,7 +4,7 @@ const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const path = require('path');
 const fetch = require('node-fetch');
-const config = require('./config.json');
+require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
 
@@ -21,9 +21,9 @@ app.use(passport.session());
 
 // Passport Configuration
 passport.use(new DiscordStrategy({
-    clientID: config.clientId,
-    clientSecret: config.clientSecret,
-    callbackURL: config.callbackURL,
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL,
     scope: ['identify', 'guilds']
 }, (accessToken, refreshToken, profile, done) => {
     return done(null, profile);
@@ -55,7 +55,7 @@ app.get('/auth/logout', (req, res) => {
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
-            headers: { Authorization: `Bot ${config.botToken}` }
+            headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
         const mutualGuilds = botGuilds.filter(guild =>
