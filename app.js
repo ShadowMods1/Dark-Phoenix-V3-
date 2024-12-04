@@ -11,7 +11,6 @@ const app = express();
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));  // Add support for form data
 app.use(session({
     secret: 'discord-bot-dashboard-secret',
     resave: false,
@@ -53,7 +52,6 @@ app.get('/auth/logout', (req, res) => {
     });
 });
 
-// Dashboard Route
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
@@ -69,15 +67,15 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
             servers: mutualGuilds
         });
     } catch (err) {
-        console.error(err);
+        console.error("Error fetching dashboard data:", err);
         res.status(500).send('Error fetching dashboard data.');
     }
 });
 
 // Server Management Route
 app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
+    const serverId = req.params.serverId;
     try {
-        const serverId = req.params.serverId;
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
@@ -85,114 +83,24 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
         const server = botGuilds.find(guild => guild.id === serverId);
 
         if (!server) {
+            console.error(`Server with ID ${serverId} not found.`);
             return res.status(404).send('Server not found.');
         }
 
+        // Check that the server has an ID and icon
+        if (!server.id || !server.icon) {
+            console.error(`Server data is incomplete: ${JSON.stringify(server)}`);
+            return res.status(500).send('Server data is incomplete.');
+        }
+
+        // Render server management page with server data
         res.render('server-management', {
             user: req.user,
             server: server
         });
     } catch (err) {
-        console.error(err);
+        console.error("Error fetching server data:", err);
         res.status(500).send('Error fetching server data.');
-    }
-});
-
-// Handle Kick User Command
-app.get('/dashboard/:serverId/kick', ensureAuthenticated, async (req, res) => {
-    const serverId = req.params.serverId;
-    const userToKick = req.query.userId;
-
-    try {
-        const guild = botClient.guilds.cache.get(serverId);
-        if (!guild) return res.status(404).send('Server not found');
-        
-        const member = await guild.members.fetch(userToKick);
-        await member.kick('User kicked via dashboard command');
-        
-        res.send('User has been kicked');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error kicking user.');
-    }
-});
-
-// Handle Ban User Command
-app.get('/dashboard/:serverId/ban', ensureAuthenticated, async (req, res) => {
-    const serverId = req.params.serverId;
-    const userToBan = req.query.userId;
-
-    try {
-        const guild = botClient.guilds.cache.get(serverId);
-        if (!guild) return res.status(404).send('Server not found');
-
-        const member = await guild.members.fetch(userToBan);
-        await member.ban({ reason: 'User banned via dashboard command' });
-
-        res.send('User has been banned');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error banning user.');
-    }
-});
-
-// Handle Send Announcement Command
-app.post('/dashboard/:serverId/announce', ensureAuthenticated, async (req, res) => {
-    const serverId = req.params.serverId;
-    const announcement = req.body.announcement;
-
-    try {
-        const guild = botClient.guilds.cache.get(serverId);
-        if (!guild) return res.status(404).send('Server not found');
-
-        const channel = guild.channels.cache.find(ch => ch.name === 'announcements');
-        if (!channel) return res.status(404).send('Announcements channel not found');
-        
-        await channel.send(announcement);
-        res.send('Announcement sent');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error sending announcement.');
-    }
-});
-
-// Handle Clear Messages Command
-app.post('/dashboard/:serverId/clear', ensureAuthenticated, async (req, res) => {
-    const serverId = req.params.serverId;
-    const amount = req.body.amount;
-
-    try {
-        const guild = botClient.guilds.cache.get(serverId);
-        if (!guild) return res.status(404).send('Server not found');
-
-        const channel = guild.channels.cache.find(ch => ch.name === 'general');
-        if (!channel) return res.status(404).send('Channel not found');
-
-        const messages = await channel.messages.fetch({ limit: amount });
-        await channel.bulkDelete(messages);
-
-        res.send('Messages have been cleared');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error clearing messages.');
-    }
-});
-
-// Handle Change Prefix Command
-app.post('/dashboard/:serverId/prefix', ensureAuthenticated, async (req, res) => {
-    const serverId = req.params.serverId;
-    const newPrefix = req.body.prefix;
-
-    try {
-        const guild = botClient.guilds.cache.get(serverId);
-        if (!guild) return res.status(404).send('Server not found');
-
-        await updateBotPrefix(serverId, newPrefix); // Implement this function
-
-        res.send('Prefix has been changed');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error changing prefix.');
     }
 });
 
