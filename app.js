@@ -82,6 +82,6 @@ function ensureAuthenticated(req, res, next) {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Glitch Port Compatibility
+// Render Port Compatibility
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
