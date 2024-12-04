@@ -25,6 +25,7 @@
     </footer>
 
     <script>
+        // Simulating the bot's status toggle
         function toggleBotStatus() {
             const statusText = document.getElementById('status-text');
             const currentStatus = statusText.textContent.trim();
@@ -36,6 +37,14 @@
 
             alert(`Toggled bot status to ${newStatus}`);
         }
+
+        // Fetch the current bot status when the page loads (simulated)
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const statusText = document.getElementById('status-text');
+                statusText.textContent = 'Online'; // Assuming the bot is online
+            }, 1000); // Simulate loading time
+        });
     </script>
 </body>
 </html>
