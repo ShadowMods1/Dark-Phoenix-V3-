@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Discord Bot Dashboard</h1>
+        <!-- Check if user is logged in using JavaScript -->
+        <div id="auth-buttons">
+            <button id="login" onclick="window.location.href='/auth/discord'">Login with Discord</button>
+            <button id="logout" style="display:none;" onclick="window.location.href='/auth/logout'">Logout</button>
+            <button id="dashboard" style="display:none;" onclick="window.location.href='/dashboard'">Go to Dashboard</button>
+        </div>
+    </header>
+    <main>
+        <p id="welcome-message">Login to manage your bot!</p>
+    </main>
+    <script>
+        // Check if user is logged in and update the buttons accordingly
+        const user = <%= JSON.stringify(user) %>;
+        if (user) {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('logout').style.display = 'inline';
+            document.getElementById('dashboard').style.display = 'inline';
+            document.getElementById('welcome-message').innerHTML = `Welcome, ${user.username}`;
+        }
+    </script>
+</body>
+</html>
