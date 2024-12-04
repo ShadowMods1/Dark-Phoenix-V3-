@@ -6,11 +6,17 @@ const fetch = require('node-fetch');
 const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
+const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+
+// Initialize Discord.js client for bot actions
+const botClient = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+
+botClient.login(process.env.BOT_TOKEN);
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,6 +36,7 @@ passport.use(new DiscordStrategy({
     callbackURL: process.env.CALLBACK_URL,
     scope: ['identify', 'guilds', 'bot']
 }, (accessToken, refreshToken, profile, done) => {
+    profile.accessToken = accessToken;
     return done(null, profile);
 }));
 
@@ -46,7 +53,7 @@ app.get('/auth/discord', passport.authenticate('discord'));
 app.get('/auth/discord/callback', passport.authenticate('discord', {
     failureRedirect: '/'
 }), (req, res) => {
-    res.redirect('/');
+    res.redirect('/dashboard');
 });
 
 app.get('/auth/logout', (req, res) => {
@@ -63,11 +70,7 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
             headers: { Authorization: `Bearer ${req.user.accessToken}` }
         }).then(res => res.json());
 
-        const mutualGuilds = botGuilds.filter(guild =>
-            req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
-        );
-
-        res.render('dashboard', { user: req.user, servers: mutualGuilds });
+        res.render('dashboard', { user: req.user, servers: botGuilds });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error fetching dashboard data.');
@@ -95,9 +98,26 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
 // Real-time socket for bot status updates
 io.on('connection', (socket) => {
     console.log('User connected to the websocket');
+    
     socket.on('toggleStatus', (serverId) => {
         // Simulate toggling the bot status
-        socket.emit('statusChanged', { serverId, newStatus: 'Online' });  // Here you could integrate real status changes
+        socket.emit('statusChanged', { serverId, newStatus: 'Online' });
+    });
+
+    socket.on('sendMessage', (serverId, message) => {
+        // Simulate sending a message to a server
+        botClient.guilds.fetch(serverId).then(guild => {
+            const defaultChannel = guild.channels.cache.find(channel => channel.type === 'GUILD_TEXT');
+            defaultChannel.send(message);
+        });
+    });
+
+    socket.on('banUser', (serverId, userId) => {
+        // Simulate banning a user from a server
+        botClient.guilds.fetch(serverId).then(guild => {
+            const member = guild.members.fetch(userId);
+            member.then(member => member.ban()).catch(console.error);
+        });
     });
 
     socket.on('disconnect', () => {
