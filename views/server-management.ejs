@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage <%= server.name %></title>
+    <title>Manage Server - <%= server.name %></title>
     <link rel="icon" href="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -51,6 +51,28 @@
             border-radius: 10px;
         }
 
+        .command-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .command-item {
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .command-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 188, 212, 0.5);
+        }
+
         .btn {
             display: inline-block;
             margin-top: 15px;
@@ -72,6 +94,25 @@
             font-size: 1rem;
             color: #e0e0e0;
         }
+
+        .form-item {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        .form-item textarea {
+            resize: none;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .form-item button {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -79,9 +120,54 @@
         <h1>Manage <%= server.name %></h1>
         <img src="https://cdn.discordapp.com/icons/<%= server.id %>/<%= server.icon %>.png" alt="<%= server.name %> Icon" width="100" height="100">
         <p>Server ID: <%= server.id %></p>
+    </div>
 
-        <a href="#" class="btn">Bot Settings</a>
-        <a href="#" class="btn">Other Options</a>
+    <div class="command-list">
+        <div class="command-item">
+            <h3>Kick User</h3>
+            <p>Kicks a user from your server. Use this to remove disruptive members.</p>
+            <a href="/dashboard/<%= server.id %>/kick?userId=USER_ID" class="btn">Kick User</a>
+        </div>
+
+        <div class="command-item">
+            <h3>Ban User</h3>
+            <p>Bans a user from your server permanently. Use with caution!</p>
+            <a href="/dashboard/<%= server.id %>/ban?userId=USER_ID" class="btn">Ban User</a>
+        </div>
+
+        <div class="command-item">
+            <h3>Send Announcement</h3>
+            <p>Sends an important announcement to all members of the server.</p>
+            <form action="/dashboard/<%= server.id %>/announce" method="post">
+                <div class="form-item">
+                    <textarea name="announcement" placeholder="Enter your announcement here..." required></textarea>
+                    <button type="submit" class="btn">Send Announcement</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="command-item">
+            <h3>Clear Messages</h3>
+            <p>Clears a certain number of messages from a channel to keep the server clean.</p>
+            <form action="/dashboard/<%= server.id %>/clear" method="post">
+                <div class="form-item">
+                    <input type="number" name="amount" placeholder="Number of messages" required>
+                    <button type="submit" class="btn">Clear Messages</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="command-item">
+            <h3>Change Prefix</h3>
+            <p>Change the command prefix for your bot in this server.</p>
+            <form action="/dashboard/<%= server.id %>/prefix" method="post">
+                <div class="form-item">
+                    <input type="text" name="prefix" placeholder="Enter new prefix" required>
+                    <button type="submit" class="btn">Change Prefix</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 
     <footer>&copy; 2024 Your Bot Dashboard. All rights reserved.</footer>
