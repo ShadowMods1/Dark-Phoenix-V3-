@@ -72,7 +72,33 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// Helper Function
+// Server Management Route
+app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
+    try {
+        const serverId = req.params.serverId;
+        const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+            headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
+        }).then(res => res.json());
+
+        const server = botGuilds.find(guild => guild.id === serverId);
+
+        if (!server) {
+            return res.status(404).send('Server not found.');
+        }
+
+        // You can retrieve specific data about the server if needed
+        // For example, server.members, server.channels, etc.
+        res.render('server-management', {
+            user: req.user,
+            server: server
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching server data.');
+    }
+});
+
+// Helper Function for Auth Check
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return next();
     res.redirect('/');
