@@ -12,17 +12,54 @@
         <a href="/auth/logout"><button>Logout</button></a>
     </header>
     <main>
-        <h2>Welcome, <%= user.username %></h2>
-        <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="User Avatar">
+        <div class="user-info">
+            <h2>Welcome, <%= user.username %></h2>
+            <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="User Avatar">
+        </div>
+
         <h3>Your Servers</h3>
         <section id="servers">
             <% servers.forEach(server => { %>
                 <div class="server-card">
                     <h3><%= server.name %></h3>
-                    <a href="/dashboard/<%= server.id %>"><button>Manage</button></a>
+                    <img src="https://cdn.discordapp.com/icons/<%= server.id %>/<%= server.icon %>.png" alt="<%= server.name %> Icon" width="50" height="50">
+                    <div class="buttons">
+                        <a href="/dashboard/<%= server.id %>"><button>Manage</button></a>
+                        <button onclick="toggleBotStatus('<%= server.id %>')">Toggle Bot Status</button>
+                    </div>
+                    <div id="status-<%= server.id %>" class="bot-status">
+                        <p>Status: <span id="status-text-<%= server.id %>">Loading...</span></p>
+                    </div>
                 </div>
             <% }) %>
         </section>
     </main>
+
+    <footer>
+        <p>Discord Bot Dashboard - Manage your bot</p>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function toggleBotStatus(serverId) {
+            const statusText = document.getElementById(`status-text-${serverId}`);
+            const currentStatus = statusText.textContent.trim();
+
+            if (currentStatus === 'Loading...') return;
+
+            const newStatus = currentStatus === 'Online' ? 'Offline' : 'Online';
+            statusText.textContent = newStatus;
+
+            socket.emit('toggleStatus', serverId);
+        }
+
+        socket.on('statusChanged', (data) => {
+            const { serverId, newStatus } = data;
+            const statusText = document.getElementById(`status-text-${serverId}`);
+            statusText.textContent = newStatus;
+        });
+    </script>
 </body>
 </html>
