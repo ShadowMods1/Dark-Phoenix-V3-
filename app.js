@@ -2,8 +2,8 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
-const path = require('path');
 const fetch = require('node-fetch');
+const path = require('path');
 require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
@@ -52,8 +52,10 @@ app.get('/auth/logout', (req, res) => {
     });
 });
 
+// Dashboard Route (Shows all servers the bot is in)
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
+        // Fetch the guilds the bot is in
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
@@ -62,43 +64,42 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
             req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
         );
 
-        // Here, you're passing the 'servers' to the dashboard view
         res.render('dashboard', {
             user: req.user,
-            servers: mutualGuilds // Make sure you pass this data correctly
+            servers: mutualGuilds
         });
     } catch (err) {
-        console.error("Error fetching dashboard data:", err);
+        console.error(err);
         res.status(500).send('Error fetching dashboard data.');
     }
 });
 
-
-// Server Management Route
+// Server Management Route (for a specific server)
 app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
-    const serverId = req.params.serverId;
     try {
+        const serverId = req.params.serverId;
+        
+        // Fetch the guilds the bot is in
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
+        // Find the specific server
         const server = botGuilds.find(guild => guild.id === serverId);
 
         if (!server) {
             return res.status(404).send('Server not found.');
         }
 
-        // Passing 'server' object to the view
         res.render('server-management', {
             user: req.user,
-            server: server // Ensure this is passed to the view
+            server: server
         });
     } catch (err) {
-        console.error("Error fetching server data:", err);
+        console.error(err);
         res.status(500).send('Error fetching server data.');
     }
 });
-
 
 // Helper Function for Auth Check
 function ensureAuthenticated(req, res, next) {
