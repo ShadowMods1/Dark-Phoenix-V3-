@@ -1,23 +1,27 @@
 {
   "name": "dark-pheonix-dashboard",
   "version": "1.0.0",
-  "description": "A Discord bot dashboard to manage Dark Pheonix",
+  "description": "A dashboard to manage your Dark Pheonix with login via Discord OAuth2.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "express-session": "^1.17.2",
-    "passport": "^0.5.0",
-    "passport-discord": "^0.1.0",
-    "ejs": "^3.1.8",
-    "node-fetch": "^2.6.7"
+    "discord.js": "^14.0.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.2.0",
+    "socket.io": "^4.0.1",
+    "node-fetch": "^2.6.1",
+    "express-session": "^1.17.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
   "engines": {
-    "node": "14.x"
+    "node": ">=14.0.0"
   },
   "author": "ShadowMods",
   "license": "MIT"
