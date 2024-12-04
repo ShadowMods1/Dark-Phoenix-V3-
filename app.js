@@ -1,4 +1,3 @@
-const { Client, GatewayIntentBits } = require('discord.js');  // Import the correct intent flags
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -8,25 +7,6 @@ const fetch = require('node-fetch');
 require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
-
-// Create a new Discord client instance with all required intents
-const botClient = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,               // Access to Guilds
-        GatewayIntentBits.GuildMembers,         // Access to Guild members
-        GatewayIntentBits.GuildMessages,        // Access to Guild messages
-        GatewayIntentBits.MessageContent,       // Access to message content (for reading messages)
-        GatewayIntentBits.GuildEmojisAndStickers, // Access to emojis and stickers
-        GatewayIntentBits.GuildIntegrations,    // Access to integrations in guilds
-        GatewayIntentBits.GuildVoiceStates,     // Access to voice states (joining, leaving voice channels)
-        GatewayIntentBits.GuildPresences,       // Access to presences (status, online/offline)
-        GatewayIntentBits.GuildModeration,      // Access to guild moderation features (bans, kicks, etc.)
-        GatewayIntentBits.DirectMessages,       // Access to direct messages with users
-        GatewayIntentBits.DirectMessageReactions, // Access to reactions in direct messages
-        GatewayIntentBits.DirectMessageTyping,   // Access to typing status in DMs
-    ]
-});
-botClient.login(process.env.BOT_TOKEN);
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -74,12 +54,10 @@ app.get('/auth/logout', (req, res) => {
 
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
-        // Fetch guilds where the bot is present
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
-        // Filter mutual guilds where the user has admin permissions
         const mutualGuilds = botGuilds.filter(guild =>
             req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
         );
@@ -108,7 +86,8 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
             return res.status(404).send('Server not found.');
         }
 
-        // Server management logic goes here. For example, showing commands to manage this server.
+        // You can retrieve specific data about the server if needed
+        // For example, server.members, server.channels, etc.
         res.render('server-management', {
             user: req.user,
             server: server
