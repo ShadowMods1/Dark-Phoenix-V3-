@@ -124,8 +124,9 @@ app.get('/status', (req, res) => {
 });
 
 // Add Bot Route
-app.get('/add-bot', ensureAuthenticated, (req, res) => {
-    res.render('addBot');
+app.get('/add-bot', (req, res) => {
+    const inviteLink = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&scope=bot`;
+    res.redirect(inviteLink);
 });
 
 // EJS Views Setup
