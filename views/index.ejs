@@ -1,59 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bot Dashboard</title>
-    <link rel="icon" href="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShadowMods Pro | Bot Dashboard</title>
+    <link
+      rel="icon"
+      href="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png"
+      type="image/x-icon"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            position: relative;
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #121212;
+        color: #e0e0e0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        position: relative;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .container h1 {
+        font-size: 3rem;
+        color: #00bcd4;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      .container p {
+        font-size: 1.2rem;
+        color: #e0e0e0;
+        margin-bottom: 30px;
+        animation: fadeIn 2s ease-in-out;
+      }
+
+      .bot-logo img {
+        width: 150px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        animation: fadeIn 2.5s ease-in-out;
+      }
+
+      .btn {
+        display: inline-block;
+        margin: 10px 15px;
+        padding: 12px 25px;
+        background-color: #00bcd4;
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: transform 0.3s ease, background 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #0097a7;
+        transform: translateY(-5px);
+      }
+
+      .btn:active {
+        transform: translateY(2px);
+      }
+
+      nav {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 1.1rem;
+      }
+
+      nav a {
+        color: #00bcd4;
+        text-decoration: none;
+        margin-left: 15px;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      nav a:hover {
+        color: #0097a7;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
         }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media screen and (max-width: 768px) {
         .container {
-            width: 100%;
-            max-width: 1000px;
-            text-align: center;
-            padding: 20px;
+          padding: 20px 10px;
         }
         .btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: #00bcd4;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 5px;
-            transition: background 0.3s ease;
+          width: 100%;
+          margin-top: 10px;
         }
-        .btn:hover {
-            background: #0097a7;
+        .bot-logo img {
+          width: 120px;
         }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="btn">Home</a>
+      <a href="/about" class="btn">About</a>
+      <a href="/install" class="btn">Install Bot</a>
+      <a href="/commands" class="btn">Commands</a>
+      <a href="/help" class="btn">Help</a>
+      <a href="/status" class="btn">Status</a>
+    </nav>
+
     <div class="container">
-        <h1>Welcome to the Bot Dashboard</h1>
-        <div class="bot-logo">
-            <img src="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png" alt="Bot Logo" width="150">
-        </div>
-        <p>Manage your bot, commands, and settings from here!</p>
+      <h1>Welcome to the Bot Dashboard</h1>
+      <div class="bot-logo">
+        <img
+          src="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png"
+          alt="Bot Logo"
+        />
+      </div>
+      <p>Manage your bot, commands, and settings from here!</p>
+
+      <div class="buttons">
         <a href="/about" class="btn">About</a>
         <a href="/install" class="btn">Install Bot</a>
         <a href="/commands" class="btn">Commands</a>
         <a href="/help" class="btn">Help</a>
         <a href="/status" class="btn">Status</a>
+      </div>
     </div>
-</body>
+  </body>
 </html>
