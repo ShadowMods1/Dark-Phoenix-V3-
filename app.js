@@ -43,7 +43,7 @@ const sampleData = {
 
 // Define a route to render the dashboard
 app.get('/', (req, res) => {
-  res.render('dashboard', sampleData);
+  res.render('index', sampleData);
 });
 
 // Define additional routes as needed
