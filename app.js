@@ -82,13 +82,13 @@ app.get('/commands', (req, res) => {
   res.render('commands');
 });
 
-// Route for the user settings page
+// Route for the user settings page (GET)
 app.get('/user-settings', (req, res) => {
   res.render('user-settings', { botSettings });
 });
 
-// Route to handle settings updates (POST request)
-app.post('/settings', (req, res) => {
+// Route to handle settings updates (POST)
+app.post('/user-settings', (req, res) => {
   const { botName, botPrefix, welcomeMessage } = req.body;
 
   // Update bot settings with new values
