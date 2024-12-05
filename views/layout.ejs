@@ -3,17 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title %></title>
-    <link
-      rel="icon"
-      href="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png"
-      type="image/x-icon"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+    <title><%= title || "Dark Phoenix Bot" %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
     <style>
+      /* Your styles here */
       body {
         font-family: "Poppins", sans-serif;
         background-color: #121212;
@@ -46,9 +39,6 @@
         position: absolute;
         top: 20px;
         left: 20px;
-        right: 20px;
-        display: flex;
-        justify-content: space-between;
         font-size: 1.1rem;
       }
 
@@ -64,49 +54,40 @@
         color: #0097a7;
       }
 
-      .content {
-        text-align: center;
-        padding: 20px;
-        max-width: 800px;
-      }
-
-      h1 {
-        color: #00bcd4;
-        font-size: 3rem;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-      }
-
       footer {
         margin-top: 40px;
         font-size: 1rem;
         color: #e0e0e0;
       }
 
-      @media screen and (max-width: 768px) {
-        nav {
-          flex-direction: column;
-        }
+      .btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #00bcd4;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 5px;
+        transition: background 0.3s ease;
+      }
 
-        .content {
-          padding: 15px;
-        }
+      .btn:hover {
+        background: #0097a7;
       }
     </style>
   </head>
   <body>
     <nav>
-      <div>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/commands">Commands</a>
-        <a href="/help">Help</a>
-        <a href="/status">Status</a>
-      </div>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/commands">Commands</a>
+      <a href="/help">Help</a>
+      <a href="/status">Status</a>
     </nav>
 
     <div class="content">
-      <%= body %>
+      <%- body %> <!-- This is where the specific page content will go -->
     </div>
 
     <footer>&copy; 2024 Dark Phoenix Bot. All rights reserved.</footer>
