@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dark Pheonix(V3) | Commands</title>
+    <title>Dark Pheonix(V3) | Home</title>
     <link
       rel="icon"
       href="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png"
@@ -14,124 +14,352 @@
       rel="stylesheet"
     />
     <style>
-      :root {
-        --primary: #7289DA;
-        --dark: #1e1e2e;
-        --darker: #151520;
-        --bright: #ffffff;
-        --accent: #ff4ecd;
-        --discord-bg: #36393f;
-        --discord-channel: #2f3136;
-      }
+    :root {
+      --primary: #7289DA;
+      --dark: #1e1e2e;
+      --darker: #151520;
+      --bright: #ffffff;
+      --accent: #ff4ecd;
+      --discord-bg: #36393f;
+      --discord-channel: #2f3136;
+    }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-      body {
-        background: var(--darker);
-        color: var(--bright);
-        min-height: 100vh;
-      }
+    body {
+      background: var(--darker);
+      color: var(--bright);
+      min-height: 100vh;
+    }
 
+    .navbar {
+      background: var(--dark);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo svg {
+      width: 40px;
+      height: 40px;
+      fill: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
       .navbar {
-        background: var(--dark);
-        padding: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-        flex-wrap: wrap;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
+        flex-direction: column;
         gap: 1rem;
+        text-align: center;
       }
 
       .nav-links {
-        display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
+        width: 100%;
+        justify-content: center;
       }
 
-      .nav-links a {
-        color: var(--bright);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
-        padding: 0.5rem;
+      .logo {
+        width: 100%;
+        justify-content: center;
       }
+    }
 
-      .nav-links a:hover {
-        color: var(--primary);
-      }
+    .nav-links a {
+      color: var(--bright);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+      padding: 0.5rem;
+    }
 
-      main {
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-        max-width: 1400px;
-        margin: 0 auto;
-      }
+    .nav-links a:hover {
+      color: var(--primary);
+    }
 
-      h2 {
-        font-size: clamp(1.5rem, 3vw, 2rem);
-        color: var(--bright);
-        margin-bottom: 1rem;
-      }
+    .dashboard {
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
-      p {
-        color: var(--bright);
-        font-size: 1.1rem;
-      }
-
-      .card {
-        background: var(--dark);
-        border-radius: 10px;
-        padding: 1.5rem;
-        transition: transform 0.3s;
-        border: 1px solid transparent;
-      }
-
-      .card:hover {
-        transform: translateY(-5px);
-        border-color: var(--primary);
-      }
-
-      .commands-list {
-        margin-top: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      .command-group {
-        margin-bottom: 2rem;
-      }
-
-      .command {
-        background: var(--discord-channel);
+    @media (max-width: 600px) {
+      .dashboard {
+        grid-template-columns: 1fr;
         padding: 1rem;
-        border-radius: 5px;
-        color: var(--bright);
+      }
+    }
+
+    .card {
+      background: var(--dark);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: transform 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+    }
+
+    .stat {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .label {
+      color: #9b9bb1;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+    }
+
+    .glow {
+      position: fixed;
+      width: 50%;
+      height: 50%;
+      background: var(--primary);
+      filter: blur(150px);
+      opacity: 0.1;
+      top: 25%;
+      left: 25%;
+      pointer-events: none;
+      animation: glow 10s ease infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-10%, 10%); }
+    }
+
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--bright);
+    }
+
+    .btn-primary:hover {
+      background: #5b73c7;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: var(--bright);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 480px) {
+      .buttons {
+        flex-direction: column;
+        align-items: stretch;
       }
 
-      .command-name {
-        font-weight: bold;
-        color: var(--primary);
+      .btn {
+        width: 100%;
+        max-width: none;
       }
-    </style>
-  </head>
-  <body>
-    <div class="glow"></div>
+    }
 
-  <nav class="navbar">
+    h2 {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      margin-bottom: 1rem;
+    }
+
+    .discord-demo {
+      background: var(--discord-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 1rem;
+      height:500px;
+    }
+
+    @media (max-width: 768px) {
+      .discord-demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .channels {
+      background: var(--discord-channel);
+      border-radius: 5px;
+      padding: 1rem;
+    }
+
+    .channel {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      color: #8e9297;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .channel:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--bright);
+    }
+
+    .channel.active {
+      background: rgba(255,255,255,0.08);
+      color: var(--bright);
+    }
+
+    .chat-area {
+      background: var(--discord-bg);
+      border-radius: 5px;
+      padding: 1rem;
+      display: flex;
+      overflow-y:auto;
+      flex-direction: column;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .message:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .username {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .timestamp {
+      color: #8e9297;
+      font-size: 0.8rem;
+    }
+
+    .command-input {
+      display: flex;
+      gap: 1rem;
+      background: #40444b;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+
+    .command-input input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--bright);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .command-input button {
+      background: var(--primary);
+      color: var(--bright);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .command-input button:hover {
+      background: #5b73c7;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .typing-dots span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: typing 1s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(1) { animation-delay: 0s; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .typing-indicator {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+
+    <nav class="navbar">
       <div class="logo">
         <img 
           src="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png" 
@@ -148,129 +376,224 @@
       </div>
     </nav>
 
-    <main>
-      <div class="card">
-        <h2>Commands</h2>
-        <p>Here are the categorized commands available for BotDash:</p>
+    <main class="dashboard">
+      <% stats.forEach(stat => { %>
+        <div class="card">
+          <div class="stat"><%= stat.value %></div>
+          <div class="label"><%= stat.label %></div>
+        </div>
+      <% }) %>
 
-        <div class="commands-list">
-          <div class="command-group">
-            <h3>General Commands</h3>
-            <div class="command">
-              <span class="command-name">!commands</span>
-              <p>List of all commands.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!ping</span>
-              <p>Check bot latency.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!avatar [user]</span>
-              <p>Get a user's avatar.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!invite</span>
-              <p>Get the invite link for the current server.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!serverinfo</span>
-              <p>Get server information.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!userinfo [user]</span>
-              <p>Get user information.</p>
-            </div>
+      <div class="card" style="grid-column: 1 / -1;">
+        <h2>Quick Actions</h2>
+        <div class="buttons">
+          <!-- Invite Bot Button with link -->
+          <button class="btn btn-primary" onclick="window.location.href='https://discord.com/oauth2/authorize?client_id=1306760882830970941';">Invite Bot</button>
+          
+          <!-- View Documentation Button with link -->
+          <button class="btn btn-secondary" onclick="window.location.href='https://github.com/ShadowMods1/Dark-Phoenix-V3-/blob/main/README.md';">View Documentation</button>
+        </div>
+      </div>
+
+      <div class="card" style="grid-column: 1 / -1;">
+        <h2>Discord Bot Demo</h2>
+      <div class="discord-demo">
+        <div class="channels">
+          <% channels.forEach(channel => { %>
+            <div class="channel <%= channel.active ? 'active' : '' %>"># <%= channel.name %></div>
+          <% }) %>
+        </div>
+        <div class="chat-area">
+          <div class="messages">
+            <% messages.forEach(message => { %>
+              <div class="message">
+                <div class="message-header">
+                  <span class="username"><%= message.username %></span>
+                  <span class="timestamp"><%= message.timestamp %></span>
+                </div>
+                <div class="content"><%= message.content %></div>
+              </div>
+            <% }) %>
           </div>
-
-          <div class="command-group">
-            <h3>Fun Commands</h3>
-            <div class="command">
-              <span class="command-name">!joke</span>
-              <p>Get a random joke.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!roll [sides]</span>
-              <p>Roll a dice.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!coinflip</span>
-              <p>Flip a coin.</p>
-            </div>
-          </div>
-
-          <div class="command-group">
-            <h3>Moderation Commands</h3>
-            <div class="command">
-              <span class="command-name">!kick [member] [reason]</span>
-              <p>Kick a member.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!ban [member] [reason]</span>
-              <p>Ban a member.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!unban [user_id]</span>
-              <p>Unban a user.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!lock [channel]</span>
-              <p>Lock a channel.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!unlock [channel]</span>
-              <p>Unlock a channel.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!slowmode [seconds] [channel]</span>
-              <p>Set slowmode for a channel.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!role [add/remove] [member] [role]</span>
-              <p>Manage roles for a user.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!nick [member] [nickname]</span>
-              <p>Change a nickname.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!deafen [member]</span>
-              <p>Deafen a user.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!undeafen [member]</span>
-              <p>Undeafen a user.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!move [member] [channel]</span>
-              <p>Move a user to a voice channel.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!purge [number]</span>
-              <p>Delete the last N messages.</p>
-            </div>
-          </div>
-
-          <div class="command-group">
-            <h3>Cheat Commands</h3>
-            <div class="command">
-              <span class="command-name">!free</span>
-              <p>Get dropdown menu for free cheats.</p>
-            </div>
-            <div class="command">
-              <span class="command-name">!paid</span>
-              <p>Get dropdown menu for paid services.</p>
-            </div>
-          </div>
-
-          <div class="command-group">
-            <h3>Admin Commands</h3>
-            <div class="command">
-              <span class="command-name">!setprefix [prefix]</span>
-              <p>Change the bot's prefix.</p>
-            </div>
+          <div class="command-input">
+            <input type="text" placeholder="Type a command (e.g. !commands)" id="commandInput">
+            <button onclick="sendCommand()">Send</button>
           </div>
         </div>
       </div>
-    </main>
-  </body>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-10px)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+      });
+    });
+
+    const stats = document.querySelectorAll('.stat');
+    stats.forEach(stat => {
+      const finalValue = stat.innerText;
+      let startValue = 0;
+      const duration = 2000;
+      const increment = parseFloat(finalValue) / (duration / 16);
+      
+      const animate = () => {
+        startValue += increment;
+        if(startValue < parseFloat(finalValue)) {
+          stat.innerText = Math.floor(startValue) + (finalValue.includes('%') ? '%' : '');
+          requestAnimationFrame(animate);
+        } else {
+          stat.innerText = finalValue;
+        }
+      };
+      
+      animate();
+    });
+
+    async function getAIResponse(message) {
+      try {
+        const response = await fetch('https://api.ai21.com/studio/v1/chat/completions', {
+         headers: {
+          "Authorization": "Bearer X2UyGrwAMCMhzJoCKYefe0NAlHwLNZwR",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "model": "jamba-instruct-preview",
+          "messages": [
+          {
+          "content": `You are a helpful Discord bot assistant named Dark Phoenix(V3). User message: ${message}\nResponse:`,
+          "role": "user"
+          }
+            ],
+          "n": 1,
+          "max_tokens": 4096,
+          "temperature": 0.7,
+          "top_p": 1,
+          "stop": []
+        }),
+        method: "POST"
+      });
+      const data = await response.json();
+      const fetchedText = data.choices[0].message.content;
+      const replacedText = fetchedText
+        .replace(/jamba/gi, "Dark Phoenix(V3)")
+        .replace(/AI21/gi, "shadowmods");
+        return replacedText;
+      } catch (error) {
+        console.error('Error getting AI response:', error);
+        return "Sorry, I'm having trouble connecting to my AI brain right now!";
+      }
+    }
+
+    async function sendCommand() {
+      const input = document.getElementById('commandInput');
+      const message = input.value.trim();
+      
+      if (message) {
+        const messages = document.querySelector('.messages');
+        
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message';
+        userMessage.innerHTML = `
+          <div class="message-header">
+            <span class="username">5hadow_pho3nix</span>
+            <span class="timestamp">Just now</span>
+          </div>
+          <div class="content">${message}</div>
+        `;
+        messages.appendChild(userMessage);
+        
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'message typing-indicator';
+        typingIndicator.innerHTML = `
+          <div class="message-header">
+            <span class="username">Dark Phoenix(V3)</span>
+            <span class="timestamp">Typing...</span>
+          </div>
+          <div class="content">
+            <div class="typing-dots"><span>.</span><span>.</span><span>.</span></div>
+          </div>
+        `;
+        messages.appendChild(typingIndicator);
+        messages.scrollTop = messages.scrollHeight;
+
+        let response;
+        
+          if (message.startsWith('!')) {
+            const command = message.toLowerCase();
+            if (command === '!commands') {
+              response = `Available commands:<br><br>
+              **General Commands**:<br>
+              !commands – List of all commands.<br>
+              !ping – Check bot latency.<br>
+              !avatar [user] – Get a user's avatar.<br>
+              !invite – Get the invite link for the current server.<br>
+              !serverinfo – Get server information.<br>
+              !userinfo [user] – Get user information.<br><br>
+              **Fun Commands**:<br>
+              !joke – Get a random joke.<br>
+              !roll [sides] – Roll a dice.<br>
+              !coinflip – Flip a coin.<br><br>
+              **Moderation Commands**:<br>
+              !kick [member] [reason] – Kick a member.<br>
+              !ban [member] [reason] – Ban a member.<br>
+              !unban [user_id] – Unban a user.<br>
+              !lock [channel] – Lock a channel.<br>
+              !unlock [channel] – Unlock a channel.<br>
+              !slowmode [seconds] [channel] – Set slowmode.<br>
+              !role [add/remove] [member] [role] – Manage roles.<br>
+              !nick [member] [nickname] – Change a nickname.<br>
+              !deafen [member] – Deafen a user.<br>
+              !undeafen [member] – Undeafen a user.<br>
+              !move [member] [channel] – Move a user to a voice channel.<br>
+              !purge [number] – Delete the last N messages.<br><br>
+              **Cheat Commands**:<br>
+              !free – Get dropdown menu for free cheats.<br>
+              !paid – Get dropdown menu for paid services.<br><br>
+              **Admin Commands**:<br>
+              !setprefix [prefix] – Change the bot's prefix.<br>`;
+            } else {
+              response = "Command not recognized. Try !help for available commands.";
+            }
+        } else {
+          response = await getAIResponse(message);
+        }
+
+        typingIndicator.remove();
+        
+        const botMessage = document.createElement('div');
+        botMessage.className = 'message';
+        botMessage.innerHTML = `
+          <div class="message-header">
+            <span class="username">Dark Phoenix(V3)</span>
+            <span class="timestamp">Just now</span>
+          </div>
+          <div class="content">${response}</div>
+        `;
+        messages.appendChild(botMessage);
+        messages.scrollTop = messages.scrollHeight;
+        
+        input.value = '';
+      }
+    }
+
+    document.getElementById('commandInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendCommand();
+      }
+    });
+
+    document.querySelectorAll('.channel').forEach(channel => {
+      channel.addEventListener('click', () => {
+        document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+        channel.classList.add('active');
+      });
+    });
+  </script>
+</body>
 </html>
