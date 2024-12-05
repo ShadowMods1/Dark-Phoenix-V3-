@@ -518,22 +518,42 @@
 
         let response;
         
-        if (message.startsWith('!')) {
-          const command = message.toLowerCase();
-          if (command === '!help') {
-            response = `Available commands:<br>
-              !help - Shows this message<br>
-              !stats - Shows bot statistics<br>
-              !ping - Checks bot latency<br>
-              !play - Plays music<br>
-              You can also chat with me normally for AI responses!`;
-          } else if (command === '!ping') {
-            response = "Pong! Latency: 42ms";
-          } else if (command === '!stats') {
-            response = "Currently serving 152 servers with 1.2K users!";
-          } else {
-            response = "Command not recognized. Try !help for available commands.";
-          }
+          if (message.startsWith('!')) {
+            const command = message.toLowerCase();
+            if (command === '!help') {
+              response = `Available commands:<br><br>
+              **General Commands**:<br>
+              !commands – List of all commands.<br>
+              !ping – Check bot latency.<br>
+              !avatar [user] – Get a user's avatar.<br>
+              !invite – Get the invite link for the current server.<br>
+              !serverinfo – Get server information.<br>
+              !userinfo [user] – Get user information.<br><br>
+              **Fun Commands**:<br>
+              !joke – Get a random joke.<br>
+              !roll [sides] – Roll a dice.<br>
+              !coinflip – Flip a coin.<br><br>
+              **Moderation Commands**:<br>
+              !kick [member] [reason] – Kick a member.<br>
+              !ban [member] [reason] – Ban a member.<br>
+              !unban [user_id] – Unban a user.<br>
+              !lock [channel] – Lock a channel.<br>
+              !unlock [channel] – Unlock a channel.<br>
+              !slowmode [seconds] [channel] – Set slowmode.<br>
+              !role [add/remove] [member] [role] – Manage roles.<br>
+              !nick [member] [nickname] – Change a nickname.<br>
+              !deafen [member] – Deafen a user.<br>
+              !undeafen [member] – Undeafen a user.<br>
+              !move [member] [channel] – Move a user to a voice channel.<br>
+              !purge [number] – Delete the last N messages.<br><br>
+              **Cheat Commands**:<br>
+              !free – Get dropdown menu for free cheats.<br>
+              !paid – Get dropdown menu for paid services.<br><br>
+              **Admin Commands**:<br>
+              !setprefix [prefix] – Change the bot's prefix.<br>`;
+            } else {
+              response = "Command not recognized. Try !help for available commands.";
+            }
         } else {
           response = await getAIResponse(message);
         }
