@@ -38,11 +38,15 @@ const sampleData = {
     { username: '5hadow_pho3nix', timestamp: '12:30 PM', content: 'Welcome to the dashboard!' },
     { username: 'AFRIENDLYHACKER', timestamp: '12:31 PM', content: 'Use !help for a list of commands!' },
     { username: 'Random_User123', timestamp: '12:32 PM', content: '!help'},
-    { username: 'Dark Phoenix(V3)', timestamp: '12:32 PM', content: 'Available commands:
+    { 
+      username: 'Dark Phoenix(V3)', 
+      timestamp: '12:32 PM', 
+      content: `Available commands:
 !help - Shows this message
 !stats - Shows bot statistics
 !ping - Checks bot latency
-!play - Plays music' }
+!play - Plays music`
+    }
   ]
 };
 
