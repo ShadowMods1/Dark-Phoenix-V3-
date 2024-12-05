@@ -21,7 +21,7 @@ const sampleData = {
     { href: '/profile', text: 'Profile' }
   ],
   stats: [
-    { label: 'Users', value: '1200' },
+    { label: 'Users', value: '159' },
     { label: 'Posts', value: '3500' },
     { label: 'Comments', value: '12000' }
   ],
@@ -41,12 +41,11 @@ const sampleData = {
     { 
       username: 'Dark Phoenix(V3)', 
       timestamp: '12:32 PM', 
-      content: [
-        { command: '!help', description: 'Shows this message' },
-        { command: '!stats', description: 'Shows bot statistics' },
-        { command: '!ping', description: 'Checks bot latency' },
-        { command: '!play', description: 'Plays music' }
-      ]
+      content: `Available commands:
+!help - Shows this message
+!stats - Shows bot statistics
+!ping - Checks bot latency
+!play - Plays music`
     }
   ]
 };
