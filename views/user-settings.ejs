@@ -5,37 +5,160 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Settings</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root {
+      --primary: #7289DA;
+      --dark: #1e1e2e;
+      --darker: #151520;
+      --bright: #ffffff;
+      --accent: #ff4ecd;
+      --discord-bg: #36393f;
+      --discord-channel: #2f3136;
+    }
+
+    * {
       margin: 0;
       padding: 0;
-      background-color: #f9f9f9;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+
+    body {
+      background: var(--darker);
+      color: var(--bright);
+      min-height: 100vh;
+    }
+
     .navbar {
+      background: var(--dark);
+      padding: 1rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      background-color: #333;
-      padding: 1rem 2rem;
-      color: #fff;
+      justify-content: space-between;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      flex-wrap: wrap;
     }
-    .navbar .logo h1 {
-      margin: 0;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    .navbar .nav-links a {
-      margin-left: 1rem;
-      color: #fff;
+
+    .logo svg {
+      width: 40px;
+      height: 40px;
+      fill: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .logo {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .nav-links a {
+      color: var(--bright);
       text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+      padding: 0.5rem;
     }
-    .navbar .nav-links a:hover {
-      text-decoration: underline;
+
+    .nav-links a:hover {
+      color: var(--primary);
     }
+
     main {
       padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      color: var(--bright);
+      margin-bottom: 1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    label {
+      font-size: 1.2rem;
+      color: var(--bright);
+    }
+
+    input {
+      padding: 0.8rem;
+      background: var(--discord-channel);
+      border: 1px solid var(--discord-bg);
+      border-radius: 10px;
+      color: var(--bright);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+    }
+
+    button {
+      background: var(--primary);
+      color: var(--bright);
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background: var(--accent);
+    }
+
+    .card {
+      background: var(--dark);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: transform 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
     }
   </style>
 </head>
 <body>
+  <div class="glow"></div>
+
   <nav class="navbar">
     <div class="logo">
       <h1>BotDash</h1>
@@ -49,20 +172,18 @@
   </nav>
 
   <main>
-    <h2>User Settings</h2>
-    <form id="settingsForm">
-      <label for="botName">Bot Name:</label>
-      <input type="text" id="botName" name="botName">
-      <label for="botPrefix">Bot Prefix:</label>
-      <input type="text" id="botPrefix" name="botPrefix">
-      <button type="submit">Save Settings</button>
-    </form>
-  </main>
+    <div class="card">
+      <h2>User Settings</h2>
+      <form id="settingsForm">
+        <label for="botName">Bot Name:</label>
+        <input type="text" id="botName" name="botName" required>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('User Settings page loaded');
-    });
-  </script>
+        <label for="botPrefix">Bot Prefix:</label>
+        <input type="text" id="botPrefix" name="botPrefix" required>
+
+        <button type="submit">Save Settings</button>
+      </form>
+    </div>
+  </main>
 </body>
 </html>
