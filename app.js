@@ -122,6 +122,14 @@ app.get('/status', (req, res) => {
     res.render('status');
 });
 
+app.get('/dashboard', (req, res) => {
+    res.render('dashboard'); // Render your Dashboard page
+});
+
+app.get('/add-bot', (req, res) => {
+    res.render('addBot'); // Render your Add Bot page
+});
+
 // Helper Function for Auth Check
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return next();
