@@ -81,7 +81,7 @@ To add Dark Phoenix Bot to your server, use the following invite link:
 
 For any questions, issues, or suggestions, you can:
 - **Join the Support Server**: [Dark Phoenix Support Server](https://discord.gg/FnGse6AvNR)
-- **Report Issues**: Please use the [GitHub Issues](https://github.com/your-username/dark-phoenix-bot/issues) page to report bugs or suggest features.
+- **Report Issues**: Please use the [GitHub Issues](https://github.com/ShadowMods1/bot-dashboard/edit/main/README.md) page to report bugs or suggest features.
 
 ---
 
@@ -101,17 +101,9 @@ This project is **private** and is not open for public cloning or redistribution
 ## 📧 **Contact**
 
 For support, inquiries, or feature requests, contact us via:
-- **Email**: darkphoenixbot@gmail.com
-- **Twitter**: [@darkphoenixbot](https://twitter.com/darkphoenixbot)
+- **Email**: shadowmods001@gmail.com
 
 ---
 
 **Dark Phoenix Bot** – Elevating your Discord server with advanced tools and features.
 ```
-
-### Key Highlights:
-1. **Commands are properly categorized** for better readability.
-2. **Removed cloning references** and emphasized the private nature of the bot.
-3. **Invite link placeholder** added for direct bot integration.
-4. **Added community links** for support and suggestions.
-
