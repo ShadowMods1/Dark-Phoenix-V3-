@@ -1,3 +1,4 @@
+<!-- user-settings.ejs -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -187,45 +188,45 @@
     <main>
       <div class="card">
         <h2>User Settings</h2>
-        <form id="settingsForm">
+        <form action="/user-settings" method="POST">
           <!-- Bot Name -->
           <label for="botName">Bot Name:</label>
-          <input type="text" id="botName" name="botName" required />
+          <input type="text" id="botName" name="botName" value="<%= botSettings.botName %>" required />
 
           <!-- Bot Prefix -->
           <label for="botPrefix">Bot Prefix:</label>
-          <input type="text" id="botPrefix" name="botPrefix" required />
+          <input type="text" id="botPrefix" name="botPrefix" value="<%= botSettings.botPrefix %>" required />
 
           <!-- Bot Status -->
           <label for="botStatus">Bot Status:</label>
           <select id="botStatus" name="botStatus">
-            <option value="online">Online</option>
-            <option value="offline">Offline</option>
-            <option value="dnd">Do Not Disturb</option>
-            <option value="invisible">Invisible</option>
-            <option value="custom">Custom Message</option>
+            <option value="online" <%= botSettings.botStatus === 'online' ? 'selected' : '' %>>Online</option>
+            <option value="offline" <%= botSettings.botStatus === 'offline' ? 'selected' : '' %>>Offline</option>
+            <option value="dnd" <%= botSettings.botStatus === 'dnd' ? 'selected' : '' %>>Do Not Disturb</option>
+            <option value="invisible" <%= botSettings.botStatus === 'invisible' ? 'selected' : '' %>>Invisible</option>
+            <option value="custom" <%= botSettings.botStatus === 'custom' ? 'selected' : '' %>>Custom Message</option>
           </select>
 
           <!-- Bot Activity -->
           <label for="botActivity">Bot Activity:</label>
           <select id="botActivity" name="botActivity">
-            <option value="playing">Playing</option>
-            <option value="listening">Listening</option>
-            <option value="watching">Watching</option>
+            <option value="playing" <%= botSettings.botActivity === 'playing' ? 'selected' : '' %>>Playing</option>
+            <option value="listening" <%= botSettings.botActivity === 'listening' ? 'selected' : '' %>>Listening</option>
+            <option value="watching" <%= botSettings.botActivity === 'watching' ? 'selected' : '' %>>Watching</option>
           </select>
 
           <!-- Bot Custom Activity Message -->
           <label for="botActivityMessage">Custom Activity Message:</label>
-          <input type="text" id="botActivityMessage" name="botActivityMessage" />
+          <input type="text" id="botActivityMessage" name="botActivityMessage" value="<%= botSettings.botActivityMessage %>" />
 
           <!-- Bot Language -->
           <label for="botLanguage">Bot Language:</label>
           <select id="botLanguage" name="botLanguage">
-            <option value="en">English</option>
-            <option value="es">Spanish</option>
-            <option value="fr">French</option>
-            <option value="de">German</option>
-            <option value="it">Italian</option>
+            <option value="en" <%= botSettings.botLanguage === 'en' ? 'selected' : '' %>>English</option>
+            <option value="es" <%= botSettings.botLanguage === 'es' ? 'selected' : '' %>>Spanish</option>
+            <option value="fr" <%= botSettings.botLanguage === 'fr' ? 'selected' : '' %>>French</option>
+            <option value="de" <%= botSettings.botLanguage === 'de' ? 'selected' : '' %>>German</option>
+            <option value="it" <%= botSettings.botLanguage === 'it' ? 'selected' : '' %>>Italian</option>
           </select>
 
           <!-- Save Button -->
