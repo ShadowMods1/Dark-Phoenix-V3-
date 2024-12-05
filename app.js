@@ -4,7 +4,7 @@ const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const fetch = require('node-fetch');
 const path = require('path');
-require('dotenv').config();  // Load environment variables from .env
+require('dotenv').config(); // Load environment variables from .env
 
 const app = express();
 
@@ -32,6 +32,12 @@ passport.use(new DiscordStrategy({
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
+// Helper Function for Authentication Check
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/');
+}
+
 // Routes
 app.get('/', (req, res) => {
     res.render('index', { user: req.user });
@@ -52,10 +58,9 @@ app.get('/auth/logout', (req, res) => {
     });
 });
 
-// Dashboard Route (Shows all servers the bot is in)
+// Dashboard Route (Shows mutual guilds with bot presence)
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
-        // Fetch the guilds the bot is in
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
@@ -74,19 +79,15 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// Server Management Route (for a specific server)
+// Server Management Route (specific server)
 app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     try {
         const serverId = req.params.serverId;
-        
-        // Fetch the guilds the bot is in
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
-        // Find the specific server
         const server = botGuilds.find(guild => guild.id === serverId);
-
         if (!server) {
             return res.status(404).send('Server not found.');
         }
@@ -101,7 +102,7 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// New Routes for About, Install, Commands, Help, Status
+// Other Static Routes
 app.get('/about', (req, res) => {
     res.render('about');
 });
@@ -122,24 +123,21 @@ app.get('/status', (req, res) => {
     res.render('status');
 });
 
-app.get('/dashboard', (req, res) => {
-    res.render('server-management'); // Render your Dashboard page
+// Add Bot Route
+app.get('/add-bot', ensureAuthenticated, (req, res) => {
+    res.render('addBot');
 });
-
-app.get('/add-bot', (req, res) => {
-    res.render('addBot'); // Render your Add Bot page
-});
-
-// Helper Function for Auth Check
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect('/');
-}
 
 // EJS Views Setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Render Port Compatibility
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// Server Listener
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
