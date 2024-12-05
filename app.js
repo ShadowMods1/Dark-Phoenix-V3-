@@ -41,11 +41,12 @@ const sampleData = {
     { 
       username: 'Dark Phoenix(V3)', 
       timestamp: '12:32 PM', 
-      content: `Available commands:
-!help - Shows this message
-!stats - Shows bot statistics
-!ping - Checks bot latency
-!play - Plays music`
+      content: [
+        { command: '!help', description: 'Shows this message' },
+        { command: '!stats', description: 'Shows bot statistics' },
+        { command: '!ping', description: 'Checks bot latency' },
+        { command: '!play', description: 'Plays music' }
+      ]
     }
   ]
 };
