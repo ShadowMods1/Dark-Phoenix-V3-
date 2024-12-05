@@ -34,6 +34,13 @@ let forumPosts = [
   },
 ];
 
+// Bot settings object
+let botSettings = {
+  botName: 'Dark Phoenix',
+  botPrefix: '!',
+  welcomeMessage: 'Welcome to Dark Phoenix!',
+};
+
 // Route to render the dashboard
 app.get('/', (req, res) => {
   res.render('index', {
@@ -65,8 +72,7 @@ app.get('/', (req, res) => {
       { username: 'Dark Phoenix(V3)', timestamp: '12:32 PM', content: `Available commands:
         !help - Shows this message
         !stats - Shows bot statistics
-        !ping - Checks bot latency
-        !play - Plays music` },
+        !ping - Checks bot latency` },
     ],
   });
 });
@@ -78,7 +84,22 @@ app.get('/commands', (req, res) => {
 
 // Route for the user settings page
 app.get('/user-settings', (req, res) => {
-  res.render('user-settings');
+  res.render('user-settings', { botSettings });
+});
+
+// Route to handle settings updates (POST request)
+app.post('/settings', (req, res) => {
+  const { botName, botPrefix, welcomeMessage } = req.body;
+
+  // Update bot settings with new values
+  botSettings = {
+    botName: botName || botSettings.botName,
+    botPrefix: botPrefix || botSettings.botPrefix,
+    welcomeMessage: welcomeMessage || botSettings.welcomeMessage,
+  };
+
+  // Render updated settings page with new settings
+  res.render('user-settings', { botSettings });
 });
 
 // Route for the support page
