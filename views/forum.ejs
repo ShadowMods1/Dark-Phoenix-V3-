@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum</title>
+  <style>
+    :root {
+      --primary: #7289DA;
+      --dark: #1e1e2e;
+      --darker: #151520;
+      --bright: #ffffff;
+      --accent: #ff4ecd;
+      --discord-bg: #36393f;
+      --discord-channel: #2f3136;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--darker);
+      color: var(--bright);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: var(--dark);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo svg {
+      width: 40px;
+      height: 40px;
+      fill: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .logo {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .nav-links a {
+      color: var(--bright);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+      padding: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    main {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      color: var(--bright);
+      margin-bottom: 1rem;
+    }
+
+    .forum-card {
+      background: var(--dark);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .forum-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .thread-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .thread-item {
+      background: var(--discord-channel);
+      padding: 1rem;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .thread-item h3 {
+      color: var(--primary);
+      margin-right: 1rem;
+    }
+
+    .thread-item p {
+      color: var(--bright);
+      font-size: 0.9rem;
+    }
+
+    .reply-list {
+      margin-top: 1rem;
+      padding-left: 20px;
+      border-left: 2px solid var(--discord-channel);
+    }
+
+    .reply-item {
+      background: var(--discord-channel);
+      padding: 0.5rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
+
+    .add-thread {
+      background-color: var(--primary);
+      color: var(--bright);
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 2rem;
+    }
+
+    .add-thread:hover {
+      background-color: var(--accent);
+    }
+
+    .reply-form {
+      margin-top: 1rem;
+      background: var(--discord-channel);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .reply-form input, .reply-form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid var(--discord-channel);
+      background: var(--dark);
+      color: var(--bright);
+    }
+
+    .reply-form button {
+      background-color: var(--primary);
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      color: var(--bright);
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .reply-form button:hover {
+      background-color: var(--accent);
+    }
+
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <h1>BotDash</h1>
+    </div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/commands">Commands</a>
+      <a href="/user-settings">Settings</a>
+      <a href="/support">Support</a>
+      <a href="/forum">Forum</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="forum-card">
+      <h2>Forum</h2>
+      <button class="add-thread" onclick="openNewThreadForm()">Create New Thread</button>
+      
+      <div class="thread-list">
+        <div class="thread-item" id="thread1">
+          <div>
+            <h3>How to use BotDash?</h3>
+            <p>Started by Admin - 5 replies</p>
+          </div>
+          <div class="reply-list" id="replies1">
+            <div class="reply-item">
+              <p><strong>User123:</strong> I need help with the setup process.</p>
+            </div>
+            <div class="reply-item">
+              <p><strong>User456:</strong> You can follow the instructions on the guide page!</p>
+            </div>
+          </div>
+          <div class="reply-form">
+            <input type="text" id="replyInput1" placeholder="Write a reply..." />
+            <button onclick="addReply(1)">Post Reply</button>
+          </div>
+        </div>
+
+        <div class="thread-item" id="thread2">
+          <div>
+            <h3>Command Issues</h3>
+            <p>Started by User123 - 3 replies</p>
+          </div>
+          <div class="reply-list" id="replies2">
+            <div class="reply-item">
+              <p><strong>Admin:</strong> Which command is causing issues?</p>
+            </div>
+            <div class="reply-item">
+              <p><strong>User123:</strong> The !help command isn't working properly.</p>
+            </div>
+          </div>
+          <div class="reply-form">
+            <input type="text" id="replyInput2" placeholder="Write a reply..." />
+            <button onclick="addReply(2)">Post Reply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function addReply(threadId) {
+      const replyInput = document.getElementById(`replyInput${threadId}`);
+      const replyText = replyInput.value.trim();
+      if (replyText === "") return;
+
+      const replyList = document.getElementById(`replies${threadId}`);
+      const newReply = document.createElement("div");
+      newReply.classList.add("reply-item");
+      newReply.innerHTML = `<p><strong>You:</strong> ${replyText}</p>`;
+      replyList.appendChild(newReply);
+      replyInput.value = "";
+    }
+
+    function openNewThreadForm() {
+      alert('This feature is under construction!');
+    }
+  </script>
+</body>
+</html>
