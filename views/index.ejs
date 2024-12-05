@@ -46,10 +46,15 @@
         position: absolute;
         top: 20px;
         left: 20px;
+        right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         font-size: 1.1rem;
       }
 
-      nav a {
+      .nav-left a,
+      .nav-right a {
         color: #00bcd4;
         text-decoration: none;
         margin-left: 15px;
@@ -57,7 +62,12 @@
         transition: color 0.3s ease;
       }
 
-      nav a:hover {
+      .nav-right a {
+        margin-left: 25px;
+      }
+
+      .nav-left a:hover,
+      .nav-right a:hover {
         color: #0097a7;
       }
 
@@ -94,17 +104,30 @@
         .text-section {
           padding: 15px;
         }
+        nav {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .nav-right {
+          margin-top: 10px;
+        }
       }
     </style>
   </head>
   <body>
     <nav>
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/install">Install</a>
-      <a href="/commands">Commands</a>
-      <a href="/help">Help</a>
-      <a href="/status">Status</a>
+      <div class="nav-left">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/install">Install</a>
+        <a href="/commands">Commands</a>
+        <a href="/help">Help</a>
+        <a href="/status">Status</a>
+      </div>
+      <div class="nav-right">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/add-bot">Add Bot</a>
+      </div>
     </nav>
 
     <div class="content">
