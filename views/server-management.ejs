@@ -1,152 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage <%= server.name %></title>
-    <link rel="icon" href="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 0;
-            background-image: url("https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png");
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            position: relative;
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const DiscordStrategy = require('passport-discord').Strategy;
+const fetch = require('node-fetch');
+const path = require('path');
+require('dotenv').config(); // Load environment variables from .env
+
+const app = express();
+
+// Middleware
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(session({
+    secret: 'discord-bot-dashboard-secret',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport Configuration
+passport.use(new DiscordStrategy({
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL,
+    scope: ['identify', 'guilds']
+}, (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+}));
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
+// Routes
+
+// Home Page
+app.get('/', (req, res) => {
+    res.render('index', { user: req.user });
+});
+
+// Discord Authentication
+app.get('/auth/discord', passport.authenticate('discord'));
+
+app.get('/auth/discord/callback', passport.authenticate('discord', {
+    failureRedirect: '/'
+}), (req, res) => {
+    res.redirect('/dashboard');
+});
+
+app.get('/auth/logout', (req, res) => {
+    req.logout(err => {
+        if (err) console.error(err);
+        res.redirect('/');
+    });
+});
+
+// Dashboard Route
+app.get('/dashboard', ensureAuthenticated, async (req, res) => {
+    try {
+        // Fetch the guilds the bot is in
+        const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+            headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
+        }).then(res => res.json());
+
+        // Filter for mutual servers
+        const mutualGuilds = botGuilds.filter(guild =>
+            req.user.guilds.some(userGuild => userGuild.id === guild.id && (userGuild.permissions & 0x20) === 0x20)
+        );
+
+        res.render('dashboard', {
+            user: req.user,
+            servers: mutualGuilds
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching dashboard data.');
+    }
+});
+
+// Server Management Route
+app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
+    try {
+        const serverId = req.params.serverId;
+
+        // Fetch the bot's guilds
+        const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+            headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
+        }).then(res => res.json());
+
+        // Find the specific server
+        const server = botGuilds.find(guild => guild.id === serverId);
+
+        if (!server) {
+            return res.status(404).send('Server not found.');
         }
 
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: -1;
-        }
+        res.render('server-management', {
+            user: req.user,
+            server: server
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error fetching server data.');
+    }
+});
 
-        nav {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-        }
+// Additional Routes
+app.get('/about', (req, res) => {
+    res.render('about', { user: req.user });
+});
 
-        nav .left, nav .right {
-            display: flex;
-            gap: 15px;
-        }
+app.get('/install', (req, res) => {
+    res.render('install', { user: req.user });
+});
 
-        nav a {
-            color: #00bcd4;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
+app.get('/commands', (req, res) => {
+    res.render('commands', { user: req.user });
+});
 
-        nav a:hover {
-            color: #0097a7;
-        }
+app.get('/help', (req, res) => {
+    res.render('help', { user: req.user });
+});
 
-        .server-info {
-            text-align: center;
-            padding: 20px;
-            z-index: 1; /* Ensure content is above the overlay */
-        }
+app.get('/status', (req, res) => {
+    res.render('status', { user: req.user });
+});
 
-        .server-info img {
-            border-radius: 10px;
-        }
+// Add Bot Route (Discord OAuth2 Add Bot URL)
+app.get('/add-bot', (req, res) => {
+    const addBotUrl = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&scope=bot%20applications.commands`;
+    res.redirect(addBotUrl);
+});
 
-        h1 {
-            color: #00bcd4;
-            font-size: 3rem;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
+// Helper Function for Authentication
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/');
+}
 
-        .btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: #00bcd4;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
+// EJS Views Setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-        .btn:hover {
-            background: #0097a7;
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 1rem;
-            color: #e0e0e0;
-            z-index: 1; /* Ensure footer is above the overlay */
-        }
-
-        @media screen and (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            nav .left, nav .right {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .btn {
-                padding: 8px 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="left">
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/commands">Commands</a>
-            <a href="/help">Help</a>
-            <a href="/status">Status</a>
-        </div>
-        <div class="right">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/add-bot">Add Bot</a>
-        </div>
-    </nav>
-
-    <div class="server-info">
-        <h1>Manage <%= server.name %></h1>
-        <img src="https://cdn.discordapp.com/icons/<%= server.id %>/<%= server.icon %>.png" alt="<%= server.name %> Icon" width="100" height="100">
-        <p>Server ID: <%= server.id %></p>
-
-        <a href="#" class="btn">Bot Settings</a>
-        <a href="#" class="btn">Other Options</a>
-    </div>
-
-    <footer>&copy; 2024 Your Bot Dashboard. All rights reserved.</footer>
-</body>
-</html>
+// Render Port Compatibility
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
