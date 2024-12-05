@@ -364,33 +364,36 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515..."></path></svg>
       <h1>BotDash</h1>
     </div>
-    <div class="nav-links">
-      <a href="/">Home</a>
-      <a href="/commands">Commands</a>
-      <a href="/user-settings">Settings</a>
-      <a href="/support">Support</a>
-      <a href="/forum">Forum</a>
-    </div>
-  </nav>
-
-  <main class="dashboard">
-    <% stats.forEach(stat => { %>
-      <div class="card">
-        <div class="stat"><%= stat.value %></div>
-        <div class="label"><%= stat.label %></div>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/commands">Commands</a>
+        <a href="/user-settings">Settings</a>
+        <a href="/support">Support</a>
+        <a href="/forum">Forum</a>
       </div>
-    <% }) %>
+    </nav>
 
-    <div class="card" style="grid-column: 1 / -1;">
-      <h2>Quick Actions</h2>
-      <div class="buttons">
-        <button class="btn btn-primary">Invite Bot</button>
-        <button class="btn btn-secondary">View Documentation</button>
+    <main class="dashboard">
+      <% stats.forEach(stat => { %>
+        <div class="card">
+          <div class="stat"><%= stat.value %></div>
+          <div class="label"><%= stat.label %></div>
+        </div>
+      <% }) %>
+
+      <div class="card" style="grid-column: 1 / -1;">
+        <h2>Quick Actions</h2>
+        <div class="buttons">
+          <!-- Invite Bot Button with link -->
+          <button class="btn btn-primary" onclick="window.location.href='https://discord.com/oauth2/authorize?client_id=1306760882830970941';">Invite Bot</button>
+          
+          <!-- View Documentation Button with link -->
+          <button class="btn btn-secondary" onclick="window.location.href='YOUR_DOCUMENTATION_URL';">View Documentation</button>
+        </div>
       </div>
-    </div>
 
-    <div class="card" style="grid-column: 1 / -1;">
-      <h2>Discord Bot Demo</h2>
+      <div class="card" style="grid-column: 1 / -1;">
+        <h2>Discord Bot Demo</h2>
       <div class="discord-demo">
         <div class="channels">
           <% channels.forEach(channel => { %>
