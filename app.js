@@ -1,66 +1,40 @@
-// Importing necessary modules
 const express = require('express');
 const path = require('path');
 
-// Initialize Express application
 const app = express();
+const port = 3000;
 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files (like stylesheets, images, etc.) from the public directory
+// Serve static files (like images, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Sample data to pass into the EJS template
-const sampleData = {
-  title: 'Dashboard',
-  logoName: 'My Dashboard',
-  navLinks: [
-    { href: '/home', text: 'Home' },
-    { href: '/settings', text: 'Settings' },
-    { href: '/profile', text: 'Profile' }
-  ],
-  stats: [
-    { label: 'Users', value: '1200' },
-    { label: 'Posts', value: '3500' },
-    { label: 'Comments', value: '12000' }
-  ],
-  quickActions: [
-    { text: 'Add New Post', class: 'btn-primary' },
-    { text: 'Manage Users', class: 'btn-secondary' }
-  ],
-  channels: [
-    { name: 'General', active: true },
-    { name: 'Help', active: false },
-    { name: 'Feedback', active: false }
-  ],
-  messages: [
-    { username: 'admin', timestamp: '12:30 PM', content: 'Welcome to the dashboard!' },
-    { username: 'user1', timestamp: '12:31 PM', content: 'Looking forward to using this feature!' },
-    { username: 'user2', timestamp: '12:32 PM', content: 'Any updates on the new features?' }
-  ]
-};
+// Middleware to parse form data (if needed)
+app.use(express.urlencoded({ extended: true }));
 
-// Define a route to render the dashboard
+// Route for the home page
 app.get('/', (req, res) => {
-  res.render('index', sampleData);
+  res.render('home');
 });
 
-// Define additional routes as needed
-app.get('/home', (req, res) => {
-  res.send('Home page content');
+// Route for the commands page
+app.get('/commands', (req, res) => {
+  res.render('commands');
 });
 
-app.get('/settings', (req, res) => {
-  res.send('Settings page content');
+// Route for the user settings page
+app.get('/user-settings', (req, res) => {
+  res.render('user-settings');
 });
 
-app.get('/profile', (req, res) => {
-  res.send('Profile page content');
+// Route for the support page
+app.get('/support', (req, res) => {
+  res.render('support');
 });
 
-// Start the Express server
-const port = 3000;
+// Start the server
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
