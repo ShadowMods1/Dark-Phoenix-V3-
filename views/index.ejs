@@ -362,7 +362,7 @@
   <nav class="navbar">
     <div class="logo">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515..."></path></svg>
-      <h1>BotDash</h1>
+      <h1>Dark Pheonix(V3)</h1>
     </div>
       <div class="nav-links">
         <a href="/">Home</a>
@@ -388,7 +388,7 @@
           <button class="btn btn-primary" onclick="window.location.href='https://discord.com/oauth2/authorize?client_id=1306760882830970941';">Invite Bot</button>
           
           <!-- View Documentation Button with link -->
-          <button class="btn btn-secondary" onclick="window.location.href='YOUR_DOCUMENTATION_URL';">View Documentation</button>
+          <button class="btn btn-secondary" onclick="window.location.href='https://github.com/ShadowMods1/Dark-Phoenix-V3-/blob/main/README.md';">View Documentation</button>
         </div>
       </div>
 
@@ -413,7 +413,7 @@
             <% }) %>
           </div>
           <div class="command-input">
-            <input type="text" placeholder="Type a command (e.g. !help)" id="commandInput">
+            <input type="text" placeholder="Type a command (e.g. !commands)" id="commandInput">
             <button onclick="sendCommand()">Send</button>
           </div>
         </div>
@@ -523,7 +523,7 @@
         
           if (message.startsWith('!')) {
             const command = message.toLowerCase();
-            if (command === '!help') {
+            if (command === '!commands') {
               response = `Available commands:<br><br>
               **General Commands**:<br>
               !commands – List of all commands.<br>
