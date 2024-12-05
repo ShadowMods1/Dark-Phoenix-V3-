@@ -123,7 +123,7 @@ app.get('/status', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
-    res.render('dashboard'); // Render your Dashboard page
+    res.render('server-management'); // Render your Dashboard page
 });
 
 app.get('/add-bot', (req, res) => {
