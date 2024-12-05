@@ -32,12 +32,6 @@ passport.use(new DiscordStrategy({
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
-// Helper Function for Authentication Check
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect('/');
-}
-
 // Routes
 app.get('/', (req, res) => {
     res.render('index', { user: req.user });
@@ -58,9 +52,10 @@ app.get('/auth/logout', (req, res) => {
     });
 });
 
-// Dashboard Route (Shows mutual guilds with bot presence)
+// Dashboard Route (Shows all servers the bot is in)
 app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     try {
+        // Fetch the guilds the bot is in
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
@@ -79,15 +74,19 @@ app.get('/dashboard', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// Server Management Route (specific server)
+// Server Management Route (for a specific server)
 app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     try {
         const serverId = req.params.serverId;
+        
+        // Fetch the guilds the bot is in
         const botGuilds = await fetch('https://discord.com/api/v10/users/@me/guilds', {
             headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` }
         }).then(res => res.json());
 
+        // Find the specific server
         const server = botGuilds.find(guild => guild.id === serverId);
+
         if (!server) {
             return res.status(404).send('Server not found.');
         }
@@ -102,43 +101,43 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     }
 });
 
-// Other Static Routes
+// New Routes for About, Install, Commands, Help, Status
 app.get('/about', (req, res) => {
-    res.render('about');
+    res.render('about', { user: req.user });
 });
 
 app.get('/install', (req, res) => {
-    res.render('install');
+    res.render('install', { user: req.user });
 });
 
 app.get('/commands', (req, res) => {
-    res.render('commands');
+    res.render('commands', { user: req.user });
 });
 
 app.get('/help', (req, res) => {
-    res.render('help');
+    res.render('help', { user: req.user });
 });
 
 app.get('/status', (req, res) => {
-    res.render('status');
+    res.render('status', { user: req.user });
 });
 
-// Add Bot Route
+// Add Bot Route (Discord OAuth2 Add Bot URL)
 app.get('/add-bot', (req, res) => {
-    const inviteLink = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&scope=bot`;
-    res.redirect(inviteLink);
+    const addBotUrl = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&scope=bot%20applications.commands`;
+    res.redirect(addBotUrl);
 });
+
+// Helper Function for Auth Check
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/');
+}
 
 // EJS Views Setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Error Handling Middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-});
-
-// Server Listener
+// Render Port Compatibility
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
