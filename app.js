@@ -101,6 +101,27 @@ app.get('/dashboard/:serverId', ensureAuthenticated, async (req, res) => {
     }
 });
 
+// New Routes for About, Install, Commands, Help, Status
+app.get('/about', (req, res) => {
+    res.render('about');
+});
+
+app.get('/install', (req, res) => {
+    res.render('install');
+});
+
+app.get('/commands', (req, res) => {
+    res.render('commands');
+});
+
+app.get('/help', (req, res) => {
+    res.render('help');
+});
+
+app.get('/status', (req, res) => {
+    res.render('status');
+});
+
 // Helper Function for Auth Check
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) return next();
