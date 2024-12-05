@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dark Pheonix(V3) | Home</title>
+    <title>Dark Pheonix(V3) | Commands</title>
     <link
       rel="icon"
       href="https://i.postimg.cc/y87h3x7y/0dc15569002a714e09ef3b03da9ac43d-removebg-preview.png"
@@ -14,350 +14,128 @@
       rel="stylesheet"
     />
     <style>
-    :root {
-      --primary: #7289DA;
-      --dark: #1e1e2e;
-      --darker: #151520;
-      --bright: #ffffff;
-      --accent: #ff4ecd;
-      --discord-bg: #36393f;
-      --discord-channel: #2f3136;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background: var(--darker);
-      color: var(--bright);
-      min-height: 100vh;
-    }
-
-    .navbar {
-      background: var(--dark);
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      flex-wrap: wrap;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .logo svg {
-      width: 40px;
-      height: 40px;
-      fill: var(--primary);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 768px) {
-      .navbar {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
+      :root {
+        --primary: #7289DA;
+        --dark: #1e1e2e;
+        --darker: #151520;
+        --bright: #ffffff;
+        --accent: #ff4ecd;
+        --discord-bg: #36393f;
+        --discord-channel: #2f3136;
       }
 
-      .nav-links {
-        width: 100%;
-        justify-content: center;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: var(--darker);
+        color: var(--bright);
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: var(--dark);
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        flex-wrap: wrap;
       }
 
       .logo {
-        width: 100%;
-        justify-content: center;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
       }
-    }
 
-    .nav-links a {
-      color: var(--bright);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-      padding: 0.5rem;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary);
-    }
-
-    .dashboard {
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    @media (max-width: 600px) {
-      .dashboard {
-        grid-template-columns: 1fr;
-        padding: 1rem;
+      .logo img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
       }
-    }
 
-    .card {
-      background: var(--dark);
-      border-radius: 10px;
-      padding: 1.5rem;
-      transition: transform 0.3s;
-      border: 1px solid transparent;
-    }
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
 
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: var(--primary);
-    }
+      .nav-links a {
+        color: var(--bright);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+        padding: 0.5rem;
+      }
 
-    .stat {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: bold;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
+      .nav-links a:hover {
+        color: var(--primary);
+      }
 
-    .label {
-      color: #9b9bb1;
-      font-size: clamp(0.8rem, 2vw, 0.9rem);
-    }
-
-    .glow {
-      position: fixed;
-      width: 50%;
-      height: 50%;
-      background: var(--primary);
-      filter: blur(150px);
-      opacity: 0.1;
-      top: 25%;
-      left: 25%;
-      pointer-events: none;
-      animation: glow 10s ease infinite;
-    }
-
-    @keyframes glow {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-10%, 10%); }
-    }
-
-    .buttons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-      flex: 1;
-      min-width: 200px;
-      max-width: 300px;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: var(--bright);
-    }
-
-    .btn-primary:hover {
-      background: #5b73c7;
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-    }
-
-    .btn-secondary:hover {
-      background: var(--primary);
-      color: var(--bright);
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: 480px) {
-      .buttons {
+      main {
+        padding: 2rem;
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
+        gap: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
       }
 
-      .btn {
-        width: 100%;
-        max-width: none;
+      h2 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        color: var(--bright);
+        margin-bottom: 1rem;
       }
-    }
 
-    h2 {
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
-      margin-bottom: 1rem;
-    }
-
-    .discord-demo {
-      background: var(--discord-bg);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-top: 2rem;
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 1rem;
-      height:500px;
-    }
-
-    @media (max-width: 768px) {
-      .discord-demo {
-        grid-template-columns: 1fr;
+      p {
+        color: var(--bright);
+        font-size: 1.1rem;
       }
-    }
 
-    .channels {
-      background: var(--discord-channel);
-      border-radius: 5px;
-      padding: 1rem;
-    }
+      .card {
+        background: var(--dark);
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: transform 0.3s;
+        border: 1px solid transparent;
+      }
 
-    .channel {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      color: #8e9297;
-      cursor: pointer;
-      border-radius: 4px;
-    }
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+      }
 
-    .channel:hover {
-      background: rgba(255,255,255,0.05);
-      color: var(--bright);
-    }
+      .commands-list {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
 
-    .channel.active {
-      background: rgba(255,255,255,0.08);
-      color: var(--bright);
-    }
+      .command-group {
+        margin-bottom: 2rem;
+      }
 
-    .chat-area {
-      background: var(--discord-bg);
-      border-radius: 5px;
-      padding: 1rem;
-      display: flex;
-      overflow-y:auto;
-      flex-direction: column;
-    }
+      .command {
+        background: var(--discord-channel);
+        padding: 1rem;
+        border-radius: 5px;
+        color: var(--bright);
+      }
 
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      margin-bottom: 1rem;
-    }
-
-    .message {
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-      border-radius: 4px;
-    }
-
-    .message:hover {
-      background: rgba(255,255,255,0.02);
-    }
-
-    .message-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .username {
-      color: var(--primary);
-      font-weight: 500;
-    }
-
-    .timestamp {
-      color: #8e9297;
-      font-size: 0.8rem;
-    }
-
-    .command-input {
-      display: flex;
-      gap: 1rem;
-      background: #40444b;
-      padding: 1rem;
-      border-radius: 5px;
-    }
-
-    .command-input input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--bright);
-      font-size: 1rem;
-      outline: none;
-    }
-
-    .command-input button {
-      background: var(--primary);
-      color: var(--bright);
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .command-input button:hover {
-      background: #5b73c7;
-    }
-
-    .typing-dots {
-      display: flex;
-      gap: 4px;
-    }
-
-    .typing-dots span {
-      width: 8px;
-      height: 8px;
-      background: var(--primary);
-      border-radius: 50%;
-      animation: typing 1s infinite ease-in-out;
-    }
-
-    .typing-dots span:nth-child(1) { animation-delay: 0s; }
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typing {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .typing-indicator {
-      opacity: 0.7;
-    }
-  </style>
-</head>
-<body>
-  <div class="glow"></div>
+      .command-name {
+        font-weight: bold;
+        color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow"></div>
 
     <nav class="navbar">
       <div class="logo">
